@@ -5,15 +5,18 @@ import { useState } from "react"
 import { useRouter } from "next/navigation";
 import {Form, Input, Button, Link, user}from "@heroui/react";
 import { useSelector, useDispatch } from 'react-redux';
-import { setEmail, setPassword } from '../store/credentialsSlice'
+import { setFirstName, setLastName, setUserName, setEmail, setPassword, setSignedIn } from '../store/credentialsSlice'
 import { create } from "domain";
 
 export default function SignInForm({signingUp}: {signingUp: boolean}) {
 
-
-
     const router = useRouter();
     const [action, setAction] = useState<string | null>(null);
+
+    // Redux state selectors and dispatcher
+    const curr_firstname = useSelector((state: any) => state.cred.firstname);
+    const curr_lastname = useSelector((state: any) => state.cred.lastname);
+    const curr_username = useSelector((state: any) => state.cred.username);
     const curr_email = useSelector((state: any) => state.cred.email);
     const curr_password = useSelector((state: any) => state.cred.password);
     const dispatch = useDispatch();
@@ -28,15 +31,20 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
         let data: Array<any> = await result.json();
         console.log("--DATA--")
         console.log(data)
-        
+        console.log(`Email: ${email}, Password: ${password}`)
         const credentials = data.filter((user) => user.email === email && user.password === password)
 
         console.log("--CREDENTIALS--")
         console.log(credentials)
         if (credentials.length > 0) {
             router.push('/gallery')
-            dispatch(setEmail(email))
-            dispatch(setPassword(password))
+            dispatch(setFirstName(credentials[0].firstname))
+            dispatch(setLastName(credentials[0].lastname))
+            dispatch(setUserName(credentials[0].username))
+            dispatch(setEmail(credentials[0].email))
+            dispatch(setPassword(credentials[0].password))
+            dispatch(setSignedIn(true))
+            alert("Login Successful")
         } else {
             alert("Invalid Credentials")
         }
@@ -44,7 +52,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     }
 
     async function createAccount(firstname: string, lastname: string, username: string, email: string, password: string) {
-        let result = await fetch(`http://localhost:5000/account_creation`, {
+        await fetch(`http://localhost:5000/account_creation`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,12 +61,26 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
         });
     }
 
-    function syncCredentials(firstname: string = "null", lastname: string = "null", username: string = "null", email: string = "null", password: string = "null") {
+    type Credentials = {
+        firstname?: string;
+        lastname?: string;
+        username?: string;
+        email: string;
+        password: string;
+    };
+
+    function syncCredentials(credentials: Credentials) {
         if (signingUp) {
-            createAccount(firstname, lastname, username, email, password)
-            checkCredentials(email = email, password = password)
+            createAccount(
+                credentials.firstname ?? "",
+                credentials.lastname ?? "",
+                credentials.username ?? "",
+                credentials.email,
+                credentials.password
+            );
+            checkCredentials(credentials.email, credentials.password);
         } else {
-            checkCredentials(email = email, password = password)    
+            checkCredentials(credentials.email, credentials.password);    
         }
     }
 
@@ -72,10 +94,16 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         let data = Object.fromEntries(new FormData(e.currentTarget));
                         console.log('--DATA--')
                         console.log(data)
-                        syncCredentials(
-                            String(data.firstname), String(data.lastname), String(data.username), String(data.email), String(data.password), 
-                        )
 
+                        let credentials = {
+                            firstname: String(data.firstname),
+                            lastname: String(data.lastname),
+                            username: String(data.username),
+                            email: String(data.email),
+                            password: String(data.password)
+                        }
+
+                        syncCredentials(credentials) 
                         setAction(`submit ${JSON.stringify(data)}`);
                     }}
                 >
@@ -136,7 +164,12 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                     e.preventDefault();
                     let data = Object.fromEntries(new FormData(e.currentTarget));
 
-                    syncCredentials(String(data.email), String(data.password))
+                    let credentials = {
+                        email: String(data.email),
+                        password: String(data.password)
+                    } 
+
+                    syncCredentials(credentials)
 
                     setAction(`submit ${JSON.stringify(data)}`);
                 }}

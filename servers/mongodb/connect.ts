@@ -14,7 +14,9 @@ console.log(`File name: ${__filename}`)
 // Load ../.env relative to this file
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-import mongoose from 'mongoose';
+// importing APIs
+import * as AccountApis from './APIs/account.ts';
+
 import express from 'express';
 import cors from "cors";
 
@@ -24,7 +26,6 @@ const app = express();
 // initializing uri and database and connecting to client
 const uri = process.env.MONGO_DB!
 console.log("Connecting to MongoDB...")
-// console.log(`URI: ${uri}`)
 const client = new MongoClient(uri,  {
         serverApi: {
             version: ServerApiVersion.v1,
@@ -45,53 +46,15 @@ async function run() {
             origin: 'http://localhost:3000' // frontend URL
         }));
 
-        // user account retrieval API
-        app.get("/user", async (req: any, resp: any) => {
-            try {
-                console.log(`Request: ${req}`)
-                // confirms successful connection by sending ping
-                const db = client.db(database);
-                console.log("Successful MongoDB connection...");
-                
-                let collection = db.collection(collections[0])
-                
-                const users = await collection.find({});
+        // account specific APIs
+        await AccountApis.getUserAccount(app, client, database, collections);
+        await AccountApis.createAccount(app, client, database, collections);
 
-                resp.status(200).send(await users.toArray());
-
-            } catch (e) {
-                resp.status(500).send({ message: "Something went wrong", error: e.message });
-            }
-        });
-
-        // API to register a user
-        app.post("/account_creation", async (req, resp) => {
-            try {
-                
-                let result = req.body;
-                console.log(`Request body: ${JSON.stringify(result)}`)
-
-                await client.connect();
-                const db = client.db(database);
-                console.log("Successful MongoDB connection...");
-
-                let collection = db.collection(collections[0])
-                // await collection.insertOne(result);
-
-                resp.status(201).send("User registered successfully");
-                let existingUser = await collection.findOne({ email: result.email, password: result.password });
-
-                console.log(`Existing user: ${existingUser}`)
-
-                if (existingUser === null) {
-                    const insertion = await collection.insertOne(result);
-                    console.log(`Insertion result: ${insertion}`)
-                }
-                
-            } catch (e) {
-                resp.status(500).send({ message: "Something went wrong", error: e.message });
-            }
-        });
+        // note specific APIs
+        // await NoteApis.getUserNotes(app, client, database, collections);
+        // await NoteApis.createNote(app, client, database, collections);
+        // await NoteApis.updateNote(app, client, database, collections);
+        // await NoteApis.deleteNote(app, client, database, collections);
 
         // Start the server
         app.listen(5000, () => {
