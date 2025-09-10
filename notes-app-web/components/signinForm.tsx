@@ -24,13 +24,15 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            // body: JSON.stringify({ email,password }),
         });
         let data: Array<any> = await result.json();
         console.log("--DATA--")
         console.log(data)
         
         const credentials = data.filter((user) => user.email === email && user.password === password)
+
+        console.log("--CREDENTIALS--")
+        console.log(credentials)
         if (credentials.length > 0) {
             router.push('/gallery')
             dispatch(setEmail(email))
@@ -51,12 +53,13 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
         });
     }
 
-    function syncCredentials(email: string, password: string, firstname: string = "null", lastname: string = "null", username: string = "null") {
+    function syncCredentials(firstname: string = "null", lastname: string = "null", username: string = "null", email: string = "null", password: string = "null") {
         if (signingUp) {
-            createAccount(email, password, firstname, lastname, username)
-            checkCredentials(email, password)
+            createAccount(firstname, lastname, username, email, password)
+            checkCredentials(email = email, password = password)
+        } else {
+            checkCredentials(email = email, password = password)    
         }
-        checkCredentials(email, password)
     }
 
     if (signingUp) {
@@ -70,7 +73,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         console.log('--DATA--')
                         console.log(data)
                         syncCredentials(
-                            String(data.email), String(data.password), String(data.firstname), String(data.lastname), String(data.username)
+                            String(data.firstname), String(data.lastname), String(data.username), String(data.email), String(data.password), 
                         )
 
                         setAction(`submit ${JSON.stringify(data)}`);
@@ -119,7 +122,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         type="password"
                     />
                     <Button type="submit" variant="flat">
-                        <Link href="../gallery">Sign Up</Link>
+                        Sign Up
                     </Button>
                 </Form>
             </>
