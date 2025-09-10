@@ -9,6 +9,7 @@ import { Nav } from "@/components/nav";
 
 export default function Home() {
 
+  localStorage.clear()
   const [signingUp, changeForm] = useState(true)
 
   let styles = {
@@ -16,7 +17,7 @@ export default function Home() {
   }
 
   return (
-    <div style={{border: "2px solid red"}}>
+    <div style={{border: ""}}>
       <main>
         <Nav />
         <SignInForm signingUp={signingUp} />
