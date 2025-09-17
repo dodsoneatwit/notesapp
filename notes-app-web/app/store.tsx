@@ -3,10 +3,12 @@ import throttle from 'lodash/throttle' // npm install --save-dev @types/lodash.t
 
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import credReducer from '../store/credentialsSlice'
+import notesReducer from '../store/notesSlice'
 import { loadState, saveState } from '../store/localStorage'
 
 const rootReducer = combineReducers({
-  cred: credReducer
+  cred: credReducer,
+  notes: notesReducer
 });
 
 const preloadedState = loadState()

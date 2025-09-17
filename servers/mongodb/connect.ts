@@ -16,6 +16,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 // importing APIs
 import * as AccountApis from './APIs/account.ts';
+import * as NoteApis from './APIs/notes.ts';
 
 import express from 'express';
 import cors from "cors";
@@ -52,7 +53,7 @@ async function run() {
 
         // note specific APIs
         // await NoteApis.getUserNotes(app, client, database, collections);
-        // await NoteApis.createNote(app, client, database, collections);
+        await NoteApis.addNotesToAccount(app, client, database, collections);
         // await NoteApis.updateNote(app, client, database, collections);
         // await NoteApis.deleteNote(app, client, database, collections);
 
