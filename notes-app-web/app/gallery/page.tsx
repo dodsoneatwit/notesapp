@@ -1,8 +1,11 @@
 "use client"
 
+import "./styles.css"
 import { useState } from "react"    
-import { Card, CardBody, CardFooter, ListboxItem, Listbox, Button, Textarea } from "@heroui/react";
+import { Button, Card, CardHeader, CardBody, CardFooter, Input, Listbox, ListboxItem, ListboxSection} from "@heroui/react";
 import { Nav } from "@/components/nav";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { setNotes } from '../../store/notesSlice'
 
@@ -101,51 +104,84 @@ export default function Gallery() {
   return (
     <div style={{border: "", justifyContent: "center"}}>
       <Nav />
-      <main style={{
-          display: "flex",
-          width: "55vw",
-          justifyContent: "space-around",
-          borderRadius: "1rem",
-          boxShadow: "4px 4px 4px 6px rgba(0, 0, 0, 0.1)",
-          alignItems: "center", 
-          height: "80vh", 
-          flexDirection: "column", 
-          gap: "1rem"
-        }}
-      >
-        <div style={styles.notesGrid}>
-          {
-            curr_notes.map((note: any, index: number) => (
-              <div style={styles.noteCardBody} key={index}>
-                <div style={{...styles.noteHeader, justifyContent: "center"}} >
-                  {note.title}
+      <div className="flex flex-row justify-evenly border-2 border-red-600">
+        <main className="border-2 border-red-600 mx-auto mt-10 p-5">
+          <Listbox className="h-full border-2 border-red-600 p-10">
+            <ListboxSection title="Spaces">
+              <ListboxItem key="1" description="Personal">Personal</ListboxItem>
+              <ListboxItem key="2" description="Work">Work</ListboxItem>
+              <ListboxItem key="3" description="Ideas">Ideas</ListboxItem>
+              <ListboxItem key="4" description="To-Do">To-Do</ListboxItem>
+              <ListboxItem key="5" description="Others">Others</ListboxItem>
+            </ListboxSection>
+          </Listbox>
+        </main>
+        <main 
+          className="flex justify-around border-2 border-red-600 mx-auto mt-10 p-5"
+          style={{
+            display: "flex",
+            width: "55vw",
+            justifyContent: "space-evenly",
+            // borderRadius: "1rem",
+            // boxShadow: "4px 4px 4px 6px rgba(0, 0, 0, 0.1)",
+            height: "80vh", 
+            flexDirection: "column", 
+            gap: "1rem"
+          }}
+        >
+          <div
+          style={{...styles.notesGrid}} className="border-2 border-red-600 flex overflow-y-auto justify-center "
+          >
+            {
+              curr_notes.map((note: any, index: number) => (
+                <div className="notecard" key={index}>
+                  <textarea 
+                    style={styles.noteTextArea}
+                    value={note.content}
+                    onChange={(e) => changeTextareaVal(index, e.target.value)} 
+                    className="hide-scrollbar" 
+                    placeholder="Take a note..."
+                  >
+                  </textarea>
+                  <footer className="relative bottom-0" style={{...styles.boldGenText, margin: "0.5rem"}}>{note.title}</footer>
                 </div>
-                <textarea 
-                  style={styles.noteTextArea}
-                  value={note.content}
-                  onChange={(e) => changeTextareaVal(index, e.target.value)} 
-                  className="hide-scrollbar" 
-                  placeholder="Take a note..."
-                >
-                </textarea>
-                <footer style={{...styles.boldGenText, margin: "0.5rem"}}>{note.title}</footer>
-              </div>
-            ))
-          }
-        </div>
-        <Button 
-          onClick={() => addNote()} 
-          className="bg-linear-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" radius="full"
-        >
-          Add
-        </Button>
-        <Button 
-          onClick={() => saveNotes()} 
-          className="bg-linear-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" radius="full"
-        >
-          Save
-        </Button>
-      </main>
+              ))
+            }
+          </div>
+          <div className="border-2 border-red-600 flex justify-evenly p-5">
+            <Button 
+              onClick={() => addNote()} 
+              className="bg-linear-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" radius="full"
+            >
+              Add
+            </Button>
+            <Button 
+              onClick={() => saveNotes()} 
+              className="bg-linear-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" radius="full"
+            >
+              Save
+            </Button>
+          </div>
+        </main>
+        <main className="border-2 border-red-600 mx-auto mt-10 p-5">
+          <Card isFooterBlurred className="h-full border-2 border-red-600">
+            <CardHeader className="flex justify-center">FLASH AI</CardHeader>
+            <CardBody>
+              <p>This is an example</p>
+            </CardBody>
+            <CardFooter>
+              <Input 
+                endContent={
+                  <FontAwesomeIcon icon={faPaperPlane} 
+                    className="cursor-pointer"
+                  />
+                }
+                variant="bordered" placeholder="Type your prompt here..." 
+              />
+            </CardFooter>
+          </Card>
+        </main>
+      </div>
     </div>
   );
 }

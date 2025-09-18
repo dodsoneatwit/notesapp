@@ -1,6 +1,6 @@
 
 import { useSelector } from 'react-redux';
-import { Navbar, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, } from "@heroui/react";
+import { Avatar, Navbar, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, } from "@heroui/react";
 
 export const Nav = () => {
 
@@ -22,7 +22,7 @@ export const Nav = () => {
                 color: "black"
               }}
             >
-              ENPOTANOTES
+              FLASH NOTES
             </div>
           </Link>
         </NavbarItem>
@@ -39,9 +39,9 @@ export const Nav = () => {
           <Dropdown backdrop='blur' style={{ marginRight: "1rem", cursor: "pointer" }}>
             <DropdownTrigger>
               <NavbarItem
-                style={{ cursor: "pointer", marginRight: "1rem", padding: ".75rem", borderRadius: "2rem", backgroundColor: "rgb(210, 105, 30, 0.7)"}}
+                style={{ cursor: "pointer", marginRight: "1rem", backgroundColor: "rgb(210, 105, 30, 0.7)"}}
               >
-                  { !signedIn ? "" : username}
+                  { !signedIn ? null : (<Avatar name={username ?? ''} color="warning" isBordered radius="sm" showFallback isFocusable/>)}
               </NavbarItem>
             </DropdownTrigger>
             <DropdownMenu>

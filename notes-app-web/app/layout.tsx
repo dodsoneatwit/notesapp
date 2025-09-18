@@ -37,6 +37,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script src="https://kit.fontawesome.com/d55a4b8e99.js" crossOrigin="anonymous"></script>
         <link href="https://fonts.googleapis.com/css2?family=Delius&family=Josefin+Slab:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet" />
       </head>
       <body

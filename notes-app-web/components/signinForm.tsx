@@ -3,7 +3,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation";
-import {Form, Input, Button, Link, user}from "@heroui/react";
+import { Form, Input, Button }from "@heroui/react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setFirstName, setLastName, setUserName, setEmail, setPassword, setSignedIn } from '../store/credentialsSlice'
 import { setNotes } from '../store/notesSlice'
