@@ -4,11 +4,14 @@ import { useState } from "react"
 import { Card, CardBody, CardFooter, ListboxItem, Listbox, Button, Textarea } from "@heroui/react";
 import { Nav } from "@/components/nav";
 import { useSelector, useDispatch } from 'react-redux';
+import { setNotes } from '../../store/notesSlice'
 
 export default function Gallery() {
 
   const curr_username = useSelector((state: any) => state.cred.username);
   const curr_password = useSelector((state: any) => state.cred.password);
+  const curr_notes = useSelector((state: any) => state.notes.notes);
+  const dispatch = useDispatch();
 
   let styles = {
     signInButton: { marginLeft: "0.5rem", padding: "0.5rem", border: "2px dodgerblue"},
@@ -62,28 +65,36 @@ export default function Gallery() {
   }
 
   function addNote() {
-    setNoteCard((prevCards: Object[]) =>
-      [
-        ...prevCards,
-        {
-          index: prevCards.length,
-          title: `Note #${prevCards.length + 1}`,
-          content: "",
-        }
-      ]
-    )
+    dispatch(setNotes([
+      ...curr_notes,
+      {
+        index: curr_notes.length,
+        title: `Note #${curr_notes.length + 1}`,
+        content: "",
+      }
+    ]))
+    // setNoteCard((prevCards: Object[]) =>
+    //   [
+    //     ...prevCards,
+    //     {
+    //       index: prevCards.length,
+    //       title: `Note #${prevCards.length + 1}`,
+    //       content: "",
+    //     }
+    //   ]
+    // )
   }
 
   async function saveNotes() {
     console.log("--Notes--");
-    console.log(noteCards);
+    console.log(curr_notes);
 
     await fetch (`http://localhost:5000/add_notes`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username: curr_username, password: curr_password, Notes: noteCards })
+      body: JSON.stringify({ username: curr_username, password: curr_password, Notes: curr_notes })
     })
   }
 
@@ -104,7 +115,7 @@ export default function Gallery() {
       >
         <div style={styles.notesGrid}>
           {
-            noteCards.map((note: any, index) => (
+            curr_notes.map((note: any, index: number) => (
               <div style={styles.noteCardBody} key={index}>
                 <div style={{...styles.noteHeader, justifyContent: "center"}} >
                   {note.title}

@@ -52,9 +52,8 @@ async function run() {
         await AccountApis.createAccount(app, client, database, collections);
 
         // note specific APIs
-        // await NoteApis.getUserNotes(app, client, database, collections);
         await NoteApis.addNotesToAccount(app, client, database, collections);
-        // await NoteApis.updateNote(app, client, database, collections);
+        await NoteApis.getAccountNotes(app, client, database, collections);
         // await NoteApis.deleteNote(app, client, database, collections);
 
         // Start the server

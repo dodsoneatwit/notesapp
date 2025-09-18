@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {Form, Input, Button, Link, user}from "@heroui/react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setFirstName, setLastName, setUserName, setEmail, setPassword, setSignedIn } from '../store/credentialsSlice'
+import { setNotes } from '../store/notesSlice'
 import { create } from "domain";
 
 export default function SignInForm({signingUp}: {signingUp: boolean}) {
@@ -21,6 +22,25 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     const curr_password = useSelector((state: any) => state.cred.password);
     const dispatch = useDispatch();
 
+    async function fetchUserNotes(username: string, password: string) {
+        let result = await fetch(`http://localhost:5000/get_notes`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        console.log("--FETCHING NOTES--")
+        console.log(result)
+        let data = await result.json();
+        console.log("--NOTES DATA--")
+        console.log(data)
+        data.forEach((e: any) => {
+            if (e.credentials.username === username && e.credentials.password === password) {
+                dispatch(setNotes(e.notes))
+            }
+        })
+    }
+
     async function checkCredentials(email: string, password: string) {
         let result = await fetch(`http://localhost:5000/user`, {
             method: 'GET',
@@ -28,6 +48,8 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                 'Content-Type': 'application/json',
             },
         });
+        console.log("--RESULT--")
+        console.log(result)
         let data: Array<any> = await result.json();
         console.log("--DATA--")
         console.log(data)
@@ -44,6 +66,9 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
             dispatch(setEmail(credentials[0].email))
             dispatch(setPassword(credentials[0].password))
             dispatch(setSignedIn(true))
+
+            // initialize notes from user's account
+            fetchUserNotes(credentials[0].username, credentials[0].password)
             alert("Login Successful")
         } else {
             alert("Invalid Credentials")

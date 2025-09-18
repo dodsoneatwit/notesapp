@@ -41,4 +41,36 @@ async function addNotesToAccount(app: any, client: any, database: string, collec
     })
 }
 
-export { addNotesToAccount }
+/**
+ * initializes notes from user's account in MongoDB into app
+ * @param app - express.js app
+ * @param client - MongoDB client
+ * @param database - database coontaining collections
+ * @param collections - array of collections in database 
+ */
+async function getAccountNotes(app: any, client: any, database: string, collections: string[]) {
+
+    app.get("/get_notes", async (req, resp) => {
+        try {
+            console.log(`Request: ${req}`)
+            console.log(`Request body: ${JSON.stringify(req.body)}`)
+
+            // confirms succesful MongoDB connection with log
+            const db = client.db(database);
+            console.log("Successful MongoDB connection...");
+
+            // retrieves user credentials and notes from MongoDB database
+            const collection = db.collection(collections[1])
+            let notes_credentials = await collection.find({}).toArray();
+
+            console.log(`Notes credentials: ${notes_credentials}`)
+            
+            resp.status(200).send(notes_credentials);
+
+        } catch (e) {
+            resp.status(500).send({ message: "Something went wrong when initializing notes...", error: e.message });
+        }
+    })
+}
+
+export { addNotesToAccount, getAccountNotes }
