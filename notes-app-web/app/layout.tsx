@@ -38,7 +38,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script src="https://kit.fontawesome.com/d55a4b8e99.js" crossOrigin="anonymous"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Delius&family=Josefin+Slab:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Delius&family=Josefin+Slab:ital,wght@0,100..700;1,100..700&family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet"></link>
       </head>
       <body
         className={clsx(
@@ -47,8 +47,8 @@ export default function RootLayout({
         )}
       >
           <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-            <div className="relative flex flex-col h-screen">
-              <main className=" pt-16 px-6 flex-grow justify-center" style={{ padding:"0rem", margin: "0.5rem"}}>
+            <div className="relative flex flex-col h-screen bg-[#FDF6E3]">
+              <main className=" pt-16 px-6 flex-grow justify-center" style={{ padding:"0rem"}}>
                   {children}
               </main>
             </div>

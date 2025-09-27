@@ -1,6 +1,6 @@
 
 import { useSelector } from 'react-redux';
-import { Avatar, Navbar, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, } from "@heroui/react";
+import { Avatar, Image, Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, } from "@heroui/react";
 
 export const Nav = () => {
 
@@ -10,6 +10,13 @@ export const Nav = () => {
 
   return (
     <Navbar isBordered shouldHideOnScroll maxWidth="full" style={{marginTop: "0.5rem", border: ""}}>
+      <NavbarBrand className="max-w-11">
+        <Image
+          className="shadow-md border-2 border-[#8D6E63] h-10 w-auto object-contain"
+          alt="Flash Notes welcome icon image"
+          src="images/signinpage/notesappicon.png"
+        />
+      </NavbarBrand>
       <NavbarContent justify="start" className="w-full">
         <NavbarItem>
           <Link>

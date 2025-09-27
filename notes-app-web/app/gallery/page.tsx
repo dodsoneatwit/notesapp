@@ -60,6 +60,8 @@ export default function Gallery() {
   const [noteCards, setNoteCard] = useState<Object[]>([])
 
   function changeTextareaVal(index: number, value: string) {
+    console.log('--CHANGE NOTE--')
+    console.log(curr_notes)
     setNoteCard((prevItems) =>
       prevItems.map((item, i) =>
         i === index ? { ...item, content: value } : item
@@ -137,7 +139,7 @@ export default function Gallery() {
                 <div className="notecard" key={index}>
                   <textarea 
                     style={styles.noteTextArea}
-                    value={note.content}
+                    // value={note.content}
                     onChange={(e) => changeTextareaVal(index, e.target.value)} 
                     className="hide-scrollbar" 
                     placeholder="Take a note..."

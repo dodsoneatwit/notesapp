@@ -20,7 +20,23 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     const curr_username = useSelector((state: any) => state.cred.username);
     const curr_email = useSelector((state: any) => state.cred.email);
     const curr_password = useSelector((state: any) => state.cred.password);
+    const curr_notes = useSelector((state: any) => state.notes.notes);
     const dispatch = useDispatch();
+
+    let styles: { [key: string]: React.CSSProperties } = {
+        formLabel: {
+            fontFamily: "Josefin Slab",
+            fontOpticalSizing: "auto",
+            fontWeight: "700",
+            fontStyle: "normal"
+        },
+        formButton: {
+            fontFamily: "Josefin Slab",
+            fontOpticalSizing: "auto",
+            fontWeight: "600",
+            fontStyle: "normal"
+        }
+    }
 
     async function fetchUserNotes(username: string, password: string) {
         let result = await fetch(`http://localhost:5000/get_notes`, {
@@ -36,7 +52,11 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
         console.log(data)
         data.forEach((e: any) => {
             if (e.credentials.username === username && e.credentials.password === password) {
+                console.log("--NOTES TO BE DISPATCHED--")
+                console.log(e.notes)
                 dispatch(setNotes(e.notes))
+                console.log('--FETCHED NOTES--')
+                console.log(curr_notes)
             }
         })
     }
@@ -113,6 +133,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
         return (
             <>
                 <Form
+                    className="flex items-center justify-center bg-[#FFFFFF] mb-5"
                     onReset={() => setAction("reset")}
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -131,6 +152,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         syncCredentials(credentials) 
                         setAction(`submit ${JSON.stringify(data)}`);
                     }}
+                    style={styles.formLabel}
                 >
                     <Input
                         isRequired
@@ -174,8 +196,8 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         placeholder="Enter a strong password"
                         type="password"
                     />
-                    <Button type="submit" variant="flat">
-                        Sign Up
+                    <Button style={styles.formLabel} className="bg-[#3E2723] text-[#FFFFFF] w-5/6 mt-2" type="submit" variant="flat">
+                        SIGN UP
                     </Button>
                 </Form>
             </>
@@ -184,6 +206,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     return (
         <>
             <Form
+                className="flex items-center justify-center bg-[#FFFFFF]"
                 onReset={() => setAction("reset")}
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -198,6 +221,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
 
                     setAction(`submit ${JSON.stringify(data)}`);
                 }}
+                style={styles.formLabel}
             >
                 <Input
                     isRequired
@@ -217,8 +241,8 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                     placeholder="Enter your password"
                     type="password"
                 />
-                <Button type="submit" variant="flat">
-                    Login
+                <Button style={styles.formLabel} className="bg-[#3E2723] text-[#FFFFFF] w-5/6 mt-10" type="submit" variant="flat">
+                    LOGIN
                 </Button>
             </Form>
         </>
