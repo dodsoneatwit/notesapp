@@ -1,11 +1,11 @@
 "use client"
 
 import "./styles.css"
-import { useState } from "react"    
+import { useState, useEffect } from "react"    
 import { Button, Card, CardHeader, CardBody, CardFooter, Input, Listbox, ListboxItem, ListboxSection} from "@heroui/react";
 import { Nav } from "@/components/nav";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { setNotes } from '../../store/notesSlice'
 
@@ -57,11 +57,26 @@ export default function Gallery() {
     }
   }
 
-  const [noteCards, setNoteCard] = useState<Object[]>([])
+  type Note = {
+    index: number;
+    title: string;
+    content: string;
+  };
+
+  const [noteCards, setNoteCard] = useState<Note[]>([])
+
+  useEffect(() => {
+    // Runs when the component mounts
+    setNoteCard(curr_notes)
+  }, []);
+
+  useEffect(() => {
+    console.log("--NOTE CARDS (UPDATED)--", noteCards);
+  }, [noteCards]);
 
   function changeTextareaVal(index: number, value: string) {
     console.log('--CHANGE NOTE--')
-    console.log(curr_notes)
+    console.log(noteCards)
     setNoteCard((prevItems) =>
       prevItems.map((item, i) =>
         i === index ? { ...item, content: value } : item
@@ -70,37 +85,41 @@ export default function Gallery() {
   }
 
   function addNote() {
-    dispatch(setNotes([
-      ...curr_notes,
-      {
-        index: curr_notes.length,
-        title: `Note #${curr_notes.length + 1}`,
-        content: "",
-      }
-    ]))
-    // setNoteCard((prevCards: Object[]) =>
-    //   [
-    //     ...prevCards,
-    //     {
-    //       index: prevCards.length,
-    //       title: `Note #${prevCards.length + 1}`,
-    //       content: "",
-    //     }
-    //   ]
-    // )
+    setNoteCard((prevCards: Note[]) =>
+      [
+        ...prevCards,
+        {
+          index: prevCards.length,
+          title: `Note #${prevCards.length + 1}`,
+          content: "",
+        }
+      ]
+    )
   }
 
-  async function saveNotes() {
-    console.log("--Notes--");
-    console.log(curr_notes);
+ function deleteNote(index: number) {
+    let new_notes = noteCards
+      .filter((note) => {
+        return index !== note.index
+      })
+      .map((note, i) => {
+        return {...note, index: i}
+      })
 
+    setNoteCard(new_notes)
+ }
+
+  async function saveNotes() {
+    console.log('--NOTES TO SAVE--')
+    console.log(noteCards)
     await fetch (`http://localhost:5000/add_notes`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username: curr_username, password: curr_password, Notes: curr_notes })
+      body: JSON.stringify({ username: curr_username, password: curr_password, Notes: noteCards })
     })
+    dispatch(setNotes(noteCards))
   }
 
   return (
@@ -132,25 +151,39 @@ export default function Gallery() {
           }}
         >
           <div
-          style={{...styles.notesGrid}} className="border-2 border-red-600 flex overflow-y-auto justify-center "
+          style={{...styles.notesGrid}} className=" flex overflow-y-auto justify-center "
           >
             {
-              curr_notes.map((note: any, index: number) => (
+              noteCards.map((note: any, index: number) => (
                 <div className="notecard" key={index}>
                   <textarea 
                     style={styles.noteTextArea}
-                    // value={note.content}
+                    value={note.content}
                     onChange={(e) => changeTextareaVal(index, e.target.value)} 
                     className="hide-scrollbar" 
                     placeholder="Take a note..."
                   >
                   </textarea>
-                  <footer className="relative bottom-0" style={{...styles.boldGenText, margin: "0.5rem"}}>{note.title}</footer>
+                  <footer className="flex justify-between items-center w-full relative bottom-0" style={{...styles.boldGenText, margin: "0.5rem"}}>
+                    <div className="">
+                      {note.title}
+                    </div>
+                    <Button
+                      className="mr-2 bg-transparent"
+                      onClick={() => deleteNote(index)}
+                      isIconOnly
+                      size="sm"
+                    >
+                      <FontAwesomeIcon icon={faTrash} 
+                          className="cursor-pointer"
+                        />
+                    </Button>
+                  </footer>
                 </div>
               ))
             }
           </div>
-          <div className="border-2 border-red-600 flex justify-evenly p-5">
+          <div className=" flex justify-evenly p-5">
             <Button 
               onClick={() => addNote()} 
               className="bg-linear-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" radius="full"
