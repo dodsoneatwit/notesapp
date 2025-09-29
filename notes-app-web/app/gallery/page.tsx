@@ -2,10 +2,18 @@
 
 import "./styles.css"
 import { useState, useEffect } from "react"    
-import { Button, Card, CardHeader, CardBody, CardFooter, Input, Listbox, ListboxItem, ListboxSection} from "@heroui/react";
+import { 
+  Button, 
+  Card, CardHeader, CardBody, CardFooter, 
+  Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, 
+  Input, Listbox, ListboxItem, ListboxSection,
+  Modal, ModalContent, ModalHeader, ModalBody, ModalFooter,
+  Textarea
+
+} from "@heroui/react";
 import { Nav } from "@/components/nav";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faCheck, faPenToSquare, faPaperPlane, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { setNotes } from '../../store/notesSlice'
 
@@ -64,6 +72,8 @@ export default function Gallery() {
   };
 
   const [noteCards, setNoteCard] = useState<Note[]>([])
+  const [activeTitle, setActiveTitle] = useState<string>("")
+  const [activeModal, setActiveModal] = useState<number>(-1);
 
   useEffect(() => {
     // Runs when the component mounts
@@ -82,6 +92,17 @@ export default function Gallery() {
         i === index ? { ...item, content: value } : item
       )
     );
+  }
+
+  function changeTitleVal(index: number) {
+    console.log('--CHANGE NOTE--')
+    console.log(noteCards)
+    setNoteCard((prevItems) =>
+      prevItems.map((item, i) =>
+        i === index ? { ...item, title: activeTitle } : item
+      )
+    );
+    setActiveModal(-1)
   }
 
   function addNote() {
@@ -143,8 +164,6 @@ export default function Gallery() {
             display: "flex",
             width: "55vw",
             justifyContent: "space-evenly",
-            // borderRadius: "1rem",
-            // boxShadow: "4px 4px 4px 6px rgba(0, 0, 0, 0.1)",
             height: "80vh", 
             flexDirection: "column", 
             gap: "1rem"
@@ -168,7 +187,64 @@ export default function Gallery() {
                     <div className="">
                       {note.title}
                     </div>
-                    <Button
+                    <Dropdown>
+                      <DropdownTrigger>
+                          <FontAwesomeIcon icon={faBars} 
+                            className="cursor-pointer"
+                          />
+                      </DropdownTrigger>
+                      <DropdownMenu>
+                        <DropdownItem
+                          key="edit_title"
+                          description="Edit note title"
+                          onClick={() => (setActiveModal(index))}
+                          startContent={
+                            <FontAwesomeIcon icon={faPenToSquare} 
+                              className="cursor-pointer"
+                            />
+                          }
+                          >
+                          Edit
+                        </DropdownItem>
+                        <DropdownItem
+                          key="delete"
+                          onClick={() => deleteNote(index)}
+                          description="Delete entire note element"
+                          startContent={<FontAwesomeIcon icon={faTrash} 
+                            className="cursor-pointer"
+                          />}
+                        >
+                          Delete
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                    <Modal isOpen={activeModal === index} onOpenChange={() => setActiveModal(-1)} className="p-2 pb-0">
+                        <ModalContent>
+                          <ModalHeader className="flex flex-col gap-1">Title Edit</ModalHeader>
+                          <ModalBody>
+                            <Textarea
+                              isClearable
+                              // value={note.title}
+                              className="hide-scrollbar"
+                              description="Edit Title"
+                              labelPlacement="outside"
+                              onChange={(e) => setActiveTitle(e.target.value)}
+                              placeholder="Update title here..."
+                            />
+                            {/* <textarea
+                              value={note.title}
+                              onChange={(e) => changeTitleVal(index, e.target.value)} 
+                              className="hide-scrollbar" 
+                              placeholder="Take a note..."
+                            >
+                            </textarea> */}
+                            <Button onClick={() => changeTitleVal(index)}>
+                              Submit Title
+                            </Button>
+                          </ModalBody>
+                        </ModalContent>
+                    </Modal>
+                    {/* <Button
                       className="mr-2 bg-transparent"
                       onClick={() => deleteNote(index)}
                       isIconOnly
@@ -177,7 +253,7 @@ export default function Gallery() {
                       <FontAwesomeIcon icon={faTrash} 
                           className="cursor-pointer"
                         />
-                    </Button>
+                    </Button> */}
                   </footer>
                 </div>
               ))
