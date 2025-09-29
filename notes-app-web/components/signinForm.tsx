@@ -23,6 +23,8 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     const curr_notes = useSelector((state: any) => state.notes.notes);
     const dispatch = useDispatch();
 
+    
+
     let styles: { [key: string]: React.CSSProperties } = {
         formLabel: {
             fontFamily: "Josefin Slab",
@@ -89,7 +91,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
 
             // initialize notes from user's account
             fetchUserNotes(credentials[0].username, credentials[0].password)
-            alert("Login Successful")
+            // alert("Login Successful")
         } else {
             alert("Invalid Credentials")
         }

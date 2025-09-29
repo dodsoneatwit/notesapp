@@ -12,20 +12,34 @@ import {
 
 } from "@heroui/react";
 import { Nav } from "@/components/nav";
+import { useRouter } from "next/navigation";
+import { setNotes } from '../../store/notesSlice'
+import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faCheck, faPenToSquare, faPaperPlane, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useSelector, useDispatch } from 'react-redux';
-import { setNotes } from '../../store/notesSlice'
+import { clearCredentials } from '../../store/credentialsSlice'
 
 export default function Gallery() {
 
+  const router = useRouter();
   const curr_username = useSelector((state: any) => state.cred.username);
   const curr_password = useSelector((state: any) => state.cred.password);
   const curr_notes = useSelector((state: any) => state.notes.notes);
   const dispatch = useDispatch();
 
-  let styles = {
-    signInButton: { marginLeft: "0.5rem", padding: "0.5rem", border: "2px dodgerblue"},
+  let styles: { [key: string]: React.CSSProperties } = {
+    button_style: { 
+      fontFamily: "Josefin Slab",
+      fontOpticalSizing: "auto",
+      fontWeight: "600",
+      fontStyle: "normal"
+    },
+    space: { 
+      fontFamily: "Josefin Slab",
+      fontOpticalSizing: "auto",
+      fontWeight: "600",
+      fontStyle: "normal"
+    },
     generalText: { fontFamily: "Delius, cursive",fontWeight: "400",fontStyle: "normal"},
     boldGenText: { fontFamily: "Delius, cursive", fontWeight: "800",fontStyle: "normal"},
     notesGrid: { 
@@ -43,7 +57,10 @@ export default function Gallery() {
       transition: "box-shadow 0.2s",
     },
     noteTextArea: {
-      fontFamily: "Delius, cursive", fontWeight: "800",fontStyle: "normal", 
+      fontFamily: "Josefin Slab",
+      fontOpticalSizing: "auto",
+      fontWeight: "600",
+      fontStyle: "normal",
       width: "100%", 
       height: "10vh",
       border: "none", 
@@ -51,7 +68,6 @@ export default function Gallery() {
       resize: "none" as const,
       borderRadius: "8px",
       padding: "0.75rem",
-      fontSize: "1rem",
       scrollbarWidth: 'none' as const,
     },
     noteHeader: {
@@ -76,13 +92,18 @@ export default function Gallery() {
   const [activeModal, setActiveModal] = useState<number>(-1);
 
   useEffect(() => {
-    // Runs when the component mounts
+    // runs when the component mounts
     setNoteCard(curr_notes)
   }, []);
 
   useEffect(() => {
     console.log("--NOTE CARDS (UPDATED)--", noteCards);
   }, [noteCards]);
+
+  function logOut() {
+    dispatch(clearCredentials())
+    router.push('/')
+  }
 
   function changeTextareaVal(index: number, value: string) {
     console.log('--CHANGE NOTE--')
@@ -146,20 +167,30 @@ export default function Gallery() {
   return (
     <div style={{border: "", justifyContent: "center"}}>
       <Nav />
-      <div className="flex flex-row justify-evenly border-2 border-red-600">
-        <main className="border-2 border-red-600 mx-auto mt-10 p-5">
-          <Listbox className="h-full border-2 border-red-600 p-10">
-            <ListboxSection title="Spaces">
-              <ListboxItem key="1" description="Personal">Personal</ListboxItem>
-              <ListboxItem key="2" description="Work">Work</ListboxItem>
-              <ListboxItem key="3" description="Ideas">Ideas</ListboxItem>
-              <ListboxItem key="4" description="To-Do">To-Do</ListboxItem>
-              <ListboxItem key="5" description="Others">Others</ListboxItem>
+      <div className="flex flex-row justify-evenly">
+        <main className="bg-[#FFFFFF] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-5 shadow-lg" style={styles['space']}>
+          <center className="font-bold text-xl">
+            <div>MY SPACES</div>
+          </center>
+          <Listbox className="p-10" selectionMode="single" variant="shadow">
+            <ListboxSection className="flex flex-col justify-center">
+              <ListboxItem className="p-5" key="1" >Personal</ListboxItem>
+              <ListboxItem className="p-5"key="2" >Work</ListboxItem>
+              <ListboxItem className="p-5">Ideas</ListboxItem>
+              <ListboxItem className="p-5">To-Do</ListboxItem>
+              <ListboxItem className="p-5" showDivider>Others</ListboxItem>
+            </ListboxSection>
+            <ListboxSection className="flex justify-center">
+              <ListboxItem
+                onPress={() => logOut()}
+              >
+                Log Out
+              </ListboxItem>
             </ListboxSection>
           </Listbox>
         </main>
         <main 
-          className="flex justify-around border-2 border-red-600 mx-auto mt-10 p-5"
+          className="flex justify-around rounded-lg border-3 border-[#3E2723] mx-auto mt-10 p-5  bg-[#FFFFFF]"
           style={{
             display: "flex",
             width: "55vw",
@@ -170,7 +201,7 @@ export default function Gallery() {
           }}
         >
           <div
-          style={{...styles.notesGrid}} className=" flex overflow-y-auto justify-center "
+          style={{...styles.notesGrid}} className="inset-shadow-lg hide-scrollbar flex overflow-y-auto justify-center pt-3 pb-3"
           >
             {
               noteCards.map((note: any, index: number) => (
@@ -179,11 +210,11 @@ export default function Gallery() {
                     style={styles.noteTextArea}
                     value={note.content}
                     onChange={(e) => changeTextareaVal(index, e.target.value)} 
-                    className="hide-scrollbar" 
+                    className="hide-scrollbar text-sm" 
                     placeholder="Take a note..."
                   >
                   </textarea>
-                  <footer className="flex justify-between items-center w-full relative bottom-0" style={{...styles.boldGenText, margin: "0.5rem"}}>
+                  <footer className="flex justify-between items-center w-full relative bottom-0 text-sm" style={{...styles.boldGenText, margin: "0.5rem"}}>
                     <div className="">
                       {note.title}
                     </div>
@@ -220,63 +251,56 @@ export default function Gallery() {
                     </Dropdown>
                     <Modal isOpen={activeModal === index} onOpenChange={() => setActiveModal(-1)} className="p-2 pb-0">
                         <ModalContent>
-                          <ModalHeader className="flex flex-col gap-1">Title Edit</ModalHeader>
+                          <ModalHeader className="flex flex-col gap-1" style={styles['button_style']}><b>Title Edit</b></ModalHeader>
                           <ModalBody>
                             <Textarea
                               isClearable
                               // value={note.title}
                               className="hide-scrollbar"
-                              description="Edit Title"
                               labelPlacement="outside"
                               onChange={(e) => setActiveTitle(e.target.value)}
                               placeholder="Update title here..."
+                              style={styles['button_style']}
                             />
-                            {/* <textarea
-                              value={note.title}
-                              onChange={(e) => changeTitleVal(index, e.target.value)} 
-                              className="hide-scrollbar" 
-                              placeholder="Take a note..."
+                            <Button 
+                              onClick={() => changeTitleVal(index)}
+                              className="bg-[#3E2723] text-[#FFFFFF]"
+                              style={styles['button_style']}
                             >
-                            </textarea> */}
-                            <Button onClick={() => changeTitleVal(index)}>
                               Submit Title
                             </Button>
                           </ModalBody>
                         </ModalContent>
                     </Modal>
-                    {/* <Button
-                      className="mr-2 bg-transparent"
-                      onClick={() => deleteNote(index)}
-                      isIconOnly
-                      size="sm"
-                    >
-                      <FontAwesomeIcon icon={faTrash} 
-                          className="cursor-pointer"
-                        />
-                    </Button> */}
                   </footer>
                 </div>
               ))
             }
           </div>
-          <div className=" flex justify-evenly p-5">
+          <div className="flex justify-evenly p-5">
             <Button 
-              onClick={() => addNote()} 
-              className="bg-linear-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" radius="full"
+              onClick={() => addNote()}
+              radius="full"
+              variant="shadow" 
+              className="bg-[#3E2723] text-[#FFFFFF]"
+              style={styles['button_style']}
             >
               Add
             </Button>
             <Button 
               onClick={() => saveNotes()} 
-              className="bg-linear-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" radius="full"
+              radius="full"
+              variant="shadow"
+              className="bg-[#3E2723] text-[#FFFFFF]"
+              style={styles['button_style']}
             >
               Save
             </Button>
           </div>
         </main>
-        <main className="border-2 border-red-600 mx-auto mt-10 p-5">
-          <Card isFooterBlurred className="h-full border-2 border-red-600">
-            <CardHeader className="flex justify-center">FLASH AI</CardHeader>
+        <main className="bg-[#FFFFFF] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-5 shadow-lg" style={styles['space']}>
+          <Card isFooterBlurred className="h-full">
+            <CardHeader className="flex justify-center font-bold text-xl">FLASH AI</CardHeader>
             <CardBody>
               <p>This is an example</p>
             </CardBody>

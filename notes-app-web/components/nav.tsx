@@ -1,12 +1,31 @@
 
-import { useSelector } from 'react-redux';
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from 'react-redux';
+import { clearCredentials } from '../store/credentialsSlice'
 import { Avatar, Image, Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, } from "@heroui/react";
 
 export const Nav = () => {
 
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   // Redux state profile initial selectors
   const username = useSelector((state: any) => state.cred.username);
   const signedIn = useSelector((state: any) => state.cred.signedIn);
+
+  let styles: { [key: string]: React.CSSProperties } = {
+    button_style: { 
+      fontFamily: "Josefin Slab",
+      fontOpticalSizing: "auto",
+      fontWeight: "600",
+      fontStyle: "normal"
+    }
+  }
+
+  function logOut() {
+    dispatch(clearCredentials())
+    router.push('/')
+  }
 
   return (
     <Navbar isBordered shouldHideOnScroll maxWidth="full" style={{marginTop: "0.5rem", border: ""}}>
@@ -51,11 +70,14 @@ export const Nav = () => {
                   { !signedIn ? null : (<Avatar name={username ?? ''} color="warning" isBordered radius="sm" showFallback isFocusable/>)}
               </NavbarItem>
             </DropdownTrigger>
-            <DropdownMenu>
+            <DropdownMenu style={styles["button_style"]}>
               <DropdownItem key="profile">
                 Profile
               </DropdownItem>
-              <DropdownItem key="Logout">
+              <DropdownItem
+                onPress={() => logOut()} 
+                key="Logout"
+              >
                 Log Out
               </DropdownItem>
             </DropdownMenu>

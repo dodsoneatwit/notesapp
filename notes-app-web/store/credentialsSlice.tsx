@@ -29,9 +29,17 @@ const credSlice = createSlice({
     },
     setSignedIn: (state, action: PayloadAction<boolean>) => { 
       state.signedIn = action.payload; 
+    },
+    clearCredentials: (state) => { 
+      state.firstname = ""
+      state.lastname = ""
+      state.username = ""
+      state.email = ""
+      state.password = ""
+      state.signedIn = false; 
     }
   }
 });
 
-export const { setFirstName, setLastName, setUserName, setEmail, setPassword, setSignedIn } = credSlice.actions;
+export const { setFirstName, setLastName, setUserName, setEmail, setPassword, setSignedIn, clearCredentials } = credSlice.actions;
 export default credSlice.reducer;
