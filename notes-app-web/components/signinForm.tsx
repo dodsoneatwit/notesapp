@@ -7,7 +7,7 @@ import { Form, Input, Button }from "@heroui/react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setFirstName, setLastName, setUserName, setEmail, setPassword, setSignedIn } from '../store/credentialsSlice'
 import { setNotes } from '../store/notesSlice'
-import { create } from "domain";
+import { setSpaces } from '../store/spacesSlice'
 
 export default function SignInForm({signingUp}: {signingUp: boolean}) {
 
@@ -15,12 +15,9 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     const [action, setAction] = useState<string | null>(null);
 
     // Redux state selectors and dispatcher
-    const curr_firstname = useSelector((state: any) => state.cred.firstname);
-    const curr_lastname = useSelector((state: any) => state.cred.lastname);
-    const curr_username = useSelector((state: any) => state.cred.username);
-    const curr_email = useSelector((state: any) => state.cred.email);
-    const curr_password = useSelector((state: any) => state.cred.password);
+    const curr_spaces = useSelector((state: any) => state.spaces.spaces);
     const curr_notes = useSelector((state: any) => state.notes.notes);
+
     const dispatch = useDispatch();
 
     
@@ -40,25 +37,47 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
         }
     }
 
-    async function fetchUserNotes(username: string, password: string) {
-        let result = await fetch(`http://localhost:5000/get_notes`, {
+    // async function fetchUserNotes(username: string, password: string) {
+    //     let result = await fetch(`http://localhost:5000/get_notes`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         }
+    //     });
+    //     console.log("--FETCHING NOTES--")
+    //     console.log(result)
+    //     let data = await result.json();
+    //     console.log("--NOTES DATA--")
+    //     console.log(data)
+    //     data.forEach((e: any) => {
+    //         if (e.credentials.username === username && e.credentials.password === password) {
+    //             console.log("--NOTES TO BE DISPATCHED--")
+    //             console.log(e.notes)
+    //             dispatch(setNotes(e.notes))
+    //             console.log('--FETCHED NOTES--')
+    //             console.log(curr_notes)
+    //         }
+    //     })
+    // }
+
+    async function fetchUserSpaces(username: string, password: string) {
+        let result = await fetch(`http://localhost:5000/get_spaces`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
         });
-        console.log("--FETCHING NOTES--")
+        console.log("--FETCHING SPACES--")
         console.log(result)
         let data = await result.json();
-        console.log("--NOTES DATA--")
+        console.log("--SPACES DATA--")
         console.log(data)
         data.forEach((e: any) => {
             if (e.credentials.username === username && e.credentials.password === password) {
-                console.log("--NOTES TO BE DISPATCHED--")
-                console.log(e.notes)
-                dispatch(setNotes(e.notes))
-                console.log('--FETCHED NOTES--')
-                console.log(curr_notes)
+                console.log("--SPACES TO BE DISPATCHED--")
+                console.log(e.spaces)
+                dispatch(setSpaces(e.spaces))
+                console.log('--FETCHED SPACES--')
             }
         })
     }
@@ -90,7 +109,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
             dispatch(setSignedIn(true))
 
             // initialize notes from user's account
-            fetchUserNotes(credentials[0].username, credentials[0].password)
+            fetchUserSpaces(credentials[0].username, credentials[0].password)
             // alert("Login Successful")
         } else {
             alert("Invalid Credentials")

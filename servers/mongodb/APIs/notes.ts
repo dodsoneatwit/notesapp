@@ -6,9 +6,9 @@
  * @param database - database coontaining collections
  * @param collections - array of collections in database
  */
-async function addNotesToAccount(app: any, client: any, database: string, collections: string[]) {
+async function addNotesToAccountSpaces(app: any, client: any, database: string, collections: string[]) {
     // API to add ntoes to user's account
-    app.post("/add_notes", async (req, resp) => {
+    app.post("/add_notes_spaces", async (req, resp) => {
         try {
             
             let result = req.body;
@@ -19,17 +19,21 @@ async function addNotesToAccount(app: any, client: any, database: string, collec
             console.log("Successful MongoDB connection...");
 
             // retrieves user credentials and notes from MongoDB database
-            let collection = db.collection(collections[1])
+            let collection = db.collection("Spaces")
             let user = await collection.findOne({credentials: { username: result.username, password: result.password }});
 
             // logs user credentials and notes to console
             console.log(`Existing user: ${user}`)
             let curr_notes = result.Notes
 
-            // replaces new notes with old notes
+            // replaces new notes to a space
             const update_result = await collection.updateOne(
-                { credentials: { username: result.username, password: result.password } },
-                { $set: { notes: curr_notes } }
+                { 
+                    "credentials.username": result.username,
+                    "credentials.password": result.password,
+                    "spaces.name": result.spname
+                },
+                { $set: { "spaces.$.notes": curr_notes}}
             );
 
             console.log(`Update result: ${update_result}`)
@@ -48,9 +52,9 @@ async function addNotesToAccount(app: any, client: any, database: string, collec
  * @param database - database coontaining collections
  * @param collections - array of collections in database 
  */
-async function getAccountNotes(app: any, client: any, database: string, collections: string[]) {
+async function getAccountSpaces(app: any, client: any, database: string, collections: string[]) {
 
-    app.get("/get_notes", async (req, resp) => {
+    app.get("/get_spaces", async (req, resp) => {
         try {
             console.log(`Request: ${req}`)
             console.log(`Request body: ${JSON.stringify(req.body)}`)
@@ -60,12 +64,12 @@ async function getAccountNotes(app: any, client: any, database: string, collecti
             console.log("Successful MongoDB connection...");
 
             // retrieves user credentials and notes from MongoDB database
-            const collection = db.collection(collections[1])
-            let notes_credentials = await collection.find({}).toArray();
+            const collection = db.collection("Spaces")
+            let spaces_credentials = await collection.find({}).toArray();
 
-            console.log(`Notes credentials: ${notes_credentials}`)
+            console.log(`Spaces credentials: ${spaces_credentials}`)
             
-            resp.status(200).send(notes_credentials);
+            resp.status(200).send(spaces_credentials);
 
         } catch (e) {
             resp.status(500).send({ message: "Something went wrong when initializing notes...", error: e.message });
@@ -73,4 +77,4 @@ async function getAccountNotes(app: any, client: any, database: string, collecti
     })
 }
 
-export { addNotesToAccount, getAccountNotes }
+export { getAccountSpaces, addNotesToAccountSpaces }

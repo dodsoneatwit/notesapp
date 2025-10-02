@@ -17,6 +17,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 // importing APIs
 import * as AccountApis from './APIs/account.ts';
 import * as NoteApis from './APIs/notes.ts';
+import * as SpacesApis from './APIs/spaces.ts'
 
 import express from 'express';
 import cors from "cors";
@@ -52,10 +53,12 @@ async function run() {
         await AccountApis.createAccount(app, client, database, collections);
 
         // note specific APIs
-        await NoteApis.addNotesToAccount(app, client, database, collections);
-        await NoteApis.getAccountNotes(app, client, database, collections);
-        // await NoteApis.deleteNote(app, client, database, collections);
+        await NoteApis.addNotesToAccountSpaces(app, client, database, collections);
+        await NoteApis.getAccountSpaces(app, client, database, collections);
 
+        // space specific APIs
+        await SpacesApis.updateSpaces(app, client, database, collections)
+        
         // Start the server
         app.listen(5000, () => {
             console.log("App is running on port 5000");

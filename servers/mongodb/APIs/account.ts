@@ -56,18 +56,18 @@ async function createAccount(app: any, client: any, database: string, collection
                 const insertion_account = await collection.insertOne(result);
 
                 // retrieving Notes collection and initializing document for new user
-                let notes_collection = db.collection(collections[1])
-                const insertion_notes = await notes_collection.insertOne(
+                let notes_collection = db.collection("Spaces")
+                const insertion_spaces = await notes_collection.insertOne(
                     {
                         credentials: {
                             username: result.username,
                             password: result.password
                         },
-                        notes: {}
+                        spaces: {}
                     }
                 );
                 console.log(`User insertion result: ${insertion_account}`)
-                console.log(`Notes insertion result: ${insertion_notes}`)
+                console.log(`Spaces insertion result: ${insertion_spaces}`)
             }
             return existingUser ? resp.status(201).send("User account already registered") : resp.status(201).send("User account registered successfully");
             
