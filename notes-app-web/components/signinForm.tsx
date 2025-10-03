@@ -182,6 +182,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         name="firstname"
                         placeholder="Enter your first name"
                         type="first name"
+                        autoComplete="firstname"
                     />
                     <Input
                         isRequired
@@ -190,6 +191,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         name="lastname"
                         placeholder="Enter your last name"
                         type="last name"
+                        autoComplete="lastname"
                     />
                     <Input
                         isRequired
@@ -198,6 +200,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         name="username"
                         placeholder="Create a username"
                         type="username"
+                        autoComplete="username"
                     />
                     <Input
                         isRequired
@@ -207,6 +210,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         name="email"
                         placeholder="Enter your email"
                         type="email"
+                        autoComplete="email"
                     />
                     <Input
                         isRequired
@@ -216,8 +220,9 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                         name="password"
                         placeholder="Enter a strong password"
                         type="password"
+                        autoComplete="password"
                     />
-                    <Button style={styles.formLabel} className="bg-[#3E2723] text-[#FFFFFF] w-5/6 mt-2" type="submit" variant="flat">
+                    <Button style={styles.formLabel} className="bg-[#3E2723] text-[#FFFFFF] w-5/6 mt-2" type="submit" variant="flat" aria-label="sign up">
                         SIGN UP
                     </Button>
                 </Form>
@@ -252,6 +257,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                     name="email"
                     placeholder="Enter your email"
                     type="email"
+                    autoComplete="email"
                 />
                 <Input
                     isRequired
@@ -261,8 +267,9 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
                     name="password"
                     placeholder="Enter your password"
                     type="password"
+                    autoComplete="password"
                 />
-                <Button style={styles.formLabel} className="bg-[#3E2723] text-[#FFFFFF] w-5/6 mt-10" type="submit" variant="flat">
+                <Button style={styles.formLabel} className="bg-[#3E2723] text-[#FFFFFF] w-5/6 mt-10" type="submit" variant="flat" aria-label="login">
                     LOGIN
                 </Button>
             </Form>

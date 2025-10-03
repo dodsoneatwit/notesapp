@@ -4,8 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearCredentials } from '../store/credentialsSlice'
 import { Avatar, Image, Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, } from "@heroui/react";
 
+/**
+ * displays nav bar with profile, app name, and logging out function
+ * @returns navigation bar component
+ */
 export const Nav = () => {
 
+  // routing and store dispatch instantiation
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -13,6 +18,7 @@ export const Nav = () => {
   const username = useSelector((state: any) => state.cred.username);
   const signedIn = useSelector((state: any) => state.cred.signedIn);
 
+  // custom CSS styles
   let styles: { [key: string]: React.CSSProperties } = {
     button_style: { 
       fontFamily: "Josefin Slab",
@@ -22,11 +28,13 @@ export const Nav = () => {
     }
   }
 
+  /**
+   * functionatity to log out and clear credentials
+   */
   function logOut() {
     dispatch(clearCredentials())
     router.push('/')
   }
-
   return (
     <Navbar isBordered shouldHideOnScroll maxWidth="full" style={{marginTop: "0.5rem", border: ""}}>
       <NavbarBrand className="max-w-11">
@@ -63,12 +71,10 @@ export const Nav = () => {
           }}
         >
           <Dropdown backdrop='blur' style={{ marginRight: "1rem", cursor: "pointer" }}>
-            <DropdownTrigger>
-              <NavbarItem
-                style={{ cursor: "pointer", marginRight: "1rem", backgroundColor: "rgb(210, 105, 30, 0.7)"}}
-              >
-                  { !signedIn ? null : (<Avatar name={username ?? ''} color="warning" isBordered radius="sm" showFallback isFocusable/>)}
-              </NavbarItem>
+            <DropdownTrigger aria-label="profile options">
+              <div>
+                { !signedIn ? null : (<Avatar name={username ?? 'User'} color="warning" isBordered radius="sm" showFallback isFocusable/>)}
+              </div>
             </DropdownTrigger>
             <DropdownMenu style={styles["button_style"]}>
               <DropdownItem key="profile">

@@ -82,6 +82,7 @@ export default function Home() {
                       radius="full"
                       variant="shadow"
                       className="bg-[#3E2723] text-[#FFFFFF]"
+                      aria-label="login to account"
                     >
                       Login Here
                     </Button>
@@ -95,6 +96,7 @@ export default function Home() {
                       radius="full"
                       variant="shadow"
                       className="bg-[#3E2723] text-[#FFFFFF]"
+                      aria-label="Create account"
                     >
                       Create One
                     </Button>
