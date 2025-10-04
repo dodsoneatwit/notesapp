@@ -42,25 +42,23 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-[#FDF6E3]">
+    <div className="bg-[#FDF6E3] min-h-screen">
       <main className="bg-[#FDF6E3]">
         <Nav />
         <div className="flex flex-row m-auto mt-2 p-10 flex-container" >
           <div className="basis-2/4">
             <center className="m-5">
               <Image
-                className="shadow-md border-2 border-[#8D6E63]"
+                className="shadow-md border-2 border-[#8D6E63] h-45 w-45 md:h-125 md:w-125"
                 alt="Flash Notes welcome icon image"
                 src="images/signinpage/notesappicon.png"
-                height={500}
-                width={500}
               />
               <h1 className="text-[#2C1810] mt-5" style={styles.imageMessage}>Where Your Thoughts Are Written in a Flash</h1>
             </center>
           </div>
           <div className="basis-2/4 flex flex-col bg-[#FFFFFF] shadow-md rounded-md p-4">
             <div className="basis-2/3">
-              <h1 className="font-medium text-3xl text-[#2C1810] m-10" style={styles.formWelcomeMessage}>
+              <h1 className="font-medium text-[1rem] text-[#2C1810] m-10" style={styles.formWelcomeMessage}>
                 <center>
                   WELCOME TO THE BEST NOTES APP
                   <br></br>

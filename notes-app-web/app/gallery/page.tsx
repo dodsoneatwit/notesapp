@@ -9,8 +9,10 @@ import { FlashAI } from "./flashai"
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from "react"
 import { 
-  Spinner
+  Button, Spinner
 } from "@heroui/react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faComments } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * appends functionality for notetaking across
@@ -28,6 +30,12 @@ export default function Gallery() {
       fontFamily: "Josefin Slab",
       fontOpticalSizing: "auto",
       fontWeight: "800",
+      fontStyle: "normal"
+    },
+    button_style: { 
+      fontFamily: "Josefin Slab",
+      fontOpticalSizing: "auto",
+      fontWeight: "600",
       fontStyle: "normal"
     }
   }
@@ -63,12 +71,19 @@ export default function Gallery() {
   }
 
   return (
-    <div style={{border: "", justifyContent: "center"}}>
+    <div>
       <Nav />
-      <div className="flex flex-row justify-evenly">
+      <div className="flex flex-row border-2 border-blue-600 pl-5 pr-5 md:pl-0 md:pr-0 justify-evenly flex-container">
         <Spaces />
         { checkSpaces() }
         <FlashAI />
+        <div className="fixed right-4 bottom-4 sm:hidden">
+          <FontAwesomeIcon icon={faComments} 
+            className="cursor-pointer"
+            style={{color: "3E2723"}}
+            size="2xl"
+          />
+        </div>
       </div>
     </div>
   );

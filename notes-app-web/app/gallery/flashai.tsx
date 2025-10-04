@@ -95,7 +95,7 @@ export const FlashAI = () => {
     }
 
     return (
-        <main className="bg-[url('/images/gallery/background_design_wave.png')] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-5 shadow-lg" style={styles['space']}>
+        <main className="bg-[url('/images/gallery/background_design_wave.png')] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-5 shadow-lg hidden sm:block" style={styles['space']}>
             <Card isFooterBlurred className="bg-[#FFFFFF] h-full border-2">
             <CardHeader className="flex justify-center font-bold text-xl">FLASH AI</CardHeader>
             <CardBody>

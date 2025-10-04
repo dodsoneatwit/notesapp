@@ -1,3 +1,9 @@
+@media (max-width: 768px) {
+  .flex-container {
+    flex-direction: column; /* On smaller screens, items stack in a column */
+  }
+}
+
 .notecard {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */

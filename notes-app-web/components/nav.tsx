@@ -47,9 +47,9 @@ export const Nav = () => {
       <NavbarContent justify="start" className="w-full">
         <NavbarItem>
           <Link>
-            <div 
-              style={{
-                fontSize: "2.5rem", 
+            <div
+              className="text-[1rem] md:text-[2.5rem]"
+              style={{ 
                 fontFamily: "Delius, cursive",
                 fontWeight: "400",
                 fontStyle: "normal",

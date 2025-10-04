@@ -6,7 +6,7 @@ import {
   Button,
   Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, 
   Form, Input, Listbox, ListboxItem, ListboxSection,
-  Modal, ModalContent, ModalBody
+  Modal, ModalContent, ModalBody, Tooltip, Toast
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { setNotes } from '../../store/notesSlice'
@@ -187,11 +187,100 @@ export const Spaces = () => {
       })
   }
   return (
-    <main className="bg-[url('/images/gallery/background_design_wave.png')] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-5 shadow-lg" style={styles['space']}>
-      <center className="font-bold text-xl">
-        <div>MY SPACES</div>
+    <main className="bg-[url('/images/gallery/background_design_wave.png')] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-2 shadow-lg w-full md:w-1/5" style={styles['space']}>
+      <center className="font-bold text-center text-xl mb-2">
+        <div className="mt-5 hidden md:block">MY SPACES</div>
+        <Dropdown>
+          <DropdownTrigger className="cursor-pointer">
+            <div className="md:hidden">
+              <Tooltip content="Click to View Spaces" className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']}>
+                <div className="bg-[#3E2723] justify-center text-center text-[#FFFFFF] rounded-lg text-[1.25rem]">MY SPACES</div>
+              </Tooltip>
+            </div>
+          </DropdownTrigger>
+          <DropdownMenu closeOnSelect={false}>
+            {
+              curr_spaces.map((space: any, index: number) => (
+                <DropdownItem key={index} className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']} onPress={() => switchSpace(index) }>
+                  <Tooltip className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']} content={"Switch to " + space.name + " Space"} placement="right">{space.name}</Tooltip>
+                  <Dropdown className="w-2" disableAnimation>
+                    <DropdownTrigger aria-label="open space menu options">
+                        <FontAwesomeIcon icon={faCaretDown} 
+                            className="cursor-pointer"
+                            size="2xs"
+                        />
+                    </DropdownTrigger>
+                    <DropdownMenu>
+                        <DropdownItem
+                          key="edit_title"
+                          description="Edit space title"
+                          onPress={() => setSpaceTitleEdit(true)}
+                          startContent={
+                            <FontAwesomeIcon icon={faPenToSquare} 
+                              className="cursor-pointer"
+                            />
+                          }
+                        >
+                        Edit
+                        </DropdownItem>
+                        <DropdownItem
+                          key="delete"
+                          onClick={() => deleteSpace(index)}
+                          description="Delete entire space element"
+                          startContent={
+                            <FontAwesomeIcon icon={faTrash} 
+                              className="cursor-pointer"
+                            />
+                          }
+                        >
+                        Delete
+                        </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                  <Modal isOpen={activeSpaceTitleEdit} onOpenChange={() => setSpaceTitleEdit(false)} className="p-2 pb-0">
+                    <ModalContent>
+                        <ModalBody>
+                          <Form 
+                              className="w-full max-w-xs font-extrabold" 
+                              style={styles['button_style']}
+                              onSubmit={(e) => {
+                                  e.preventDefault();
+                                  let data = Object.fromEntries(new FormData(e.currentTarget));
+                                  setSpaceTitleEdit(false)
+                                  changeSpaceTitleVal(index, String(data.title))
+                              }}
+                          >
+                              <Input
+                                isRequired
+                                errorMessage="Please enter a valid title"
+                                label="Edit Title for Space"
+                                labelPlacement="outside"
+                                name="title"
+                                placeholder="Enter title"
+                                type="text"   
+                                style={styles['button_style']}
+                                autoComplete="off"
+                              />
+                              <Button 
+                                type="submit" 
+                                variant="bordered"
+                                className="bg-[#3E2723] text-[#FFFFFF]"
+                                style={styles['button_style']}
+                                aria-label="save title"
+                              >
+                                Save Title
+                              </Button>
+                          </Form>
+                        </ModalBody>
+                    </ModalContent>
+                  </Modal>
+                </DropdownItem>
+              ))
+            }
+          </DropdownMenu>
+        </Dropdown>
       </center>
-      <Listbox key="spaces_box" className="p-10" selectionMode="single" variant="shadow" aria-label="spaces section">
+      <Listbox key="spaces_box" className="hidden md:block" selectionMode="single" variant="shadow" aria-label="spaces section">
         <ListboxSection key="spaces" className="flex flex-col justify-center text-lg" showDivider>
             {
               curr_spaces.map((space: any, index: number) => (
@@ -330,6 +419,51 @@ export const Spaces = () => {
             </ListboxItem>
         </ListboxSection>
       </Listbox>
+      <div className="flex justify-center items-center gap-2 md:w-100 ml-10 mr-10 overflow-x-auto p-1 md:hidden">
+        <Button size="sm" className="bg-[#FFFFFF] text-[#3E2723] font-bold" onPress={() => setSpaceNewTitle(true)}>
+            Add Space
+        </Button>
+        <Modal isOpen={activeSpaceNewTitle} onOpenChange={() => setSpaceNewTitle(false)} className="p-2 pb-0">
+            <ModalContent>
+                <ModalBody>
+                  <Form 
+                      className="w-full max-w-xs font-extrabold" 
+                      style={styles['button_style']}
+                      onSubmit={(e) => {
+                          e.preventDefault();
+                          let data = Object.fromEntries(new FormData(e.currentTarget));
+                          setSpaceNewTitle(false)
+                          addSpace(String(data.title))
+                      }}
+                  >
+                      <Input
+                        isRequired
+                        errorMessage="Please enter a valid title"
+                        label="CREATE YOUR SPACE"
+                        labelPlacement="outside"
+                        name="title"
+                        placeholder="Enter title"
+                        type="text"   
+                        style={styles['button_style']}
+                        autoComplete="off"
+                      />
+                      <Button 
+                        type="submit" 
+                        variant="bordered"
+                        className="bg-[#3E2723] text-[#FFFFFF]"
+                        style={styles['button_style']}
+                        aria-label="create space"
+                      >
+                        Submit
+                      </Button>
+                  </Form>
+                </ModalBody>
+            </ModalContent>
+        </Modal>
+        <Button size="sm" className="bg-[#FFFFFF] text-[#3E2723] font-bold justify-center" onPress={() => logOut()}>
+          Log Out
+        </Button>
+      </div>
     </main>
   )
 }

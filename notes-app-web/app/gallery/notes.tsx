@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { 
   Button,
   Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
-  Modal, ModalContent, ModalBody, ModalHeader, Textarea
+  Modal, ModalContent, ModalBody, ModalHeader, Textarea, ScrollShadow
 } from "@heroui/react";
 import { setNotes } from '../../store/notesSlice'
 import { setSpaces } from "@/store/spacesSlice";
@@ -25,55 +25,50 @@ export const Notes = () => {
     // custom CSS styles
     let styles: { [key: string]: React.CSSProperties } = {
         button_style: { 
-        fontFamily: "Josefin Slab",
-        fontOpticalSizing: "auto",
-        fontWeight: "600",
-        fontStyle: "normal"
+          fontFamily: "Josefin Slab",
+          fontOpticalSizing: "auto",
+          fontWeight: "600",
+          fontStyle: "normal"
         },
         space: { 
-        fontFamily: "Josefin Slab",
-        fontOpticalSizing: "auto",
-        fontWeight: "600",
-        fontStyle: "normal"
+          fontFamily: "Josefin Slab",
+          fontOpticalSizing: "auto",
+          fontWeight: "600",
+          fontStyle: "normal"
         },
         generalText: { fontFamily: "Delius, cursive",fontWeight: "400",fontStyle: "normal"},
         boldGenText: { fontFamily: "Delius, cursive", fontWeight: "800",fontStyle: "normal"},
-        notesGrid: { 
-        display: "flex",
-        gap: "1rem",
-        flexWrap: "wrap" as const,
-        },
         noteCardBody: {
-        flex: "1 1 calc(33.33% - 20px)", border: "1px solid rgb(0, 0, 0)",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-        borderRadius: "0.5rem",
-        background: "rgba(238, 213, 175, 0.97)",
-        minWidth: "250px",
-        maxWidth: "350px",
-        transition: "box-shadow 0.2s",
+          flex: "1 1 calc(33.33% - 20px)", border: "1px solid rgb(0, 0, 0)",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+          borderRadius: "0.5rem",
+          background: "rgba(238, 213, 175, 0.97)",
+          minWidth: "250px",
+          maxWidth: "350px",
+          transition: "box-shadow 0.2s",
         },
         noteTextArea: {
-        fontFamily: "Josefin Slab",
-        fontOpticalSizing: "auto",
-        fontWeight: "600",
-        fontStyle: "normal",
-        width: "100%", 
-        height: "10vh",
-        border: "none", 
-        outline: "none",
-        resize: "none" as const,
-        borderRadius: "8px",
-        padding: "0.75rem",
-        scrollbarWidth: 'none' as const,
+          fontFamily: "Josefin Slab",
+          fontOpticalSizing: "auto",
+          fontWeight: "600",
+          fontStyle: "normal",
+          width: "100%", 
+          height: "10vh",
+          border: "none", 
+          outline: "none",
+          resize: "none" as const,
+          borderRadius: "8px",
+          padding: "0.75rem",
+          scrollbarWidth: 'none' as const,
         },
         noteHeader: {
-        borderTopRightRadius: "0.5rem",
-        borderTopLeftRadius: "0.5rem",
-        backgroundColor: "rgba(0, 0, 0)",
-        marginTop: "0%",
-        paddingLeft: "0.75rem",
-        paddingRight: "0.75rem",
-        color: "white",
+          borderTopRightRadius: "0.5rem",
+          borderTopLeftRadius: "0.5rem",
+          backgroundColor: "rgba(0, 0, 0)",
+          marginTop: "0%",
+          paddingLeft: "0.75rem",
+          paddingRight: "0.75rem",
+          color: "white",
         }
     }
 
@@ -197,27 +192,33 @@ export const Notes = () => {
 
     return (
         <main 
-          className="flex justify-around rounded-lg border-3 border-[#3E2723] mx-auto mt-10 p-5  bg-[#FFFFFF]"
+          className="flex md:w-200 justify-around rounded-lg border-3 border-[#3E2723] md:mx-auto mt-10 mb-10 p-5 bg-[#FFFFFF] max-h-90 md:max-h-150 md:h-dvh"
           style={{
             display: "flex",
-            width: "55vw",
+            // width: "vw",
             justifyContent: "space-evenly",
-            height: "80vh", 
             flexDirection: "column", 
             gap: "1rem"
           }}
         >
-          <div
-          style={{...styles.notesGrid}} className="inset-shadow-lg hide-scrollbar flex overflow-y-auto justify-center pt-3 pb-3"
+          <ScrollShadow
+            style={{...styles.notesGrid}} 
+            className="
+            inset-shadow-lg hide-scrollbar flex overflow-y-auto 
+            justify-center pt-3 pb-3 grid gap-4 grid-cols-2 lg:grid-cols-3
+            "
           >
             {
               curr_notes.map((note: any, index: number) => (
-                <div className="notecard" key={index}>
+                <div 
+                  className="notecard md:max-h-100 md:max-w-100" 
+                  key={index}
+                >
                   <textarea 
                     style={styles.noteTextArea}
                     value={note.content}
                     onChange={(e) => changeTextareaVal(index, e.target.value)} 
-                    className="hide-scrollbar text-sm" 
+                    className="hide-scrollbar  text-xs md:text-sm" 
                     placeholder="Take a note..."
                   >
                   </textarea>
@@ -283,8 +284,8 @@ export const Notes = () => {
                 </div>
               ))
             }
-          </div>
-          <div className="flex justify-evenly p-5">
+          </ScrollShadow>
+          <div className="flex justify-evenly md:p-5">
             <Button 
               onClick={() => addNote()}
               radius="full"
