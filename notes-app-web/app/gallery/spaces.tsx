@@ -28,7 +28,7 @@ export const Spaces = () => {
   // global store variables
   const curr_username = useSelector((state: any) => state.cred.username);
   const curr_password = useSelector((state: any) => state.cred.password);
-  const curr_spaces = useSelector((state: any) => state.spaces.spaces);
+  const curr_spaces = useSelector((state: any) => state.spaces.spaces || []);
   const dispatch = useDispatch();
 
   // type for defining notes  and spaces
@@ -106,23 +106,25 @@ export const Spaces = () => {
    * @param name name of new space to be added
    */
   function addSpace(name: string) {
-    // adds new spaces to global space variable
-    dispatch(
-      setSpaces([
-        ...curr_spaces,
+    // adds new spaces to global space variable; safely accounts for undefined value
+    const safeSpaces = Array.isArray(curr_spaces) ? curr_spaces : [];
+
+    // creates new temporary instance
+    const newSpace = {
+      index: safeSpaces.length,
+      name: name,
+      notes: [
         {
-          index: curr_spaces.length,
-          name: name,
-          notes: [ // gives default values
-            {
-              index: 0,
-              title: "Note #1",
-              content: "",
-            }
-          ]
-        }
-      ])
-    )
+          index: 0,
+          title: "Note #1",
+          content: "",
+        },
+      ],
+    };
+
+    // updated spaces array
+    dispatch(setSpaces([...safeSpaces, newSpace]));
+
     // triggers boolean to ensure save on space addition
     setSpaceUpdate(true)
   }
@@ -186,52 +188,46 @@ export const Spaces = () => {
         body: JSON.stringify({ username: curr_username, password: curr_password, Spaces: curr_spaces })
       })
   }
-  return (
-    <main className="bg-[url('/images/gallery/background_design_wave.png')] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-2 shadow-lg w-full md:w-1/5" style={styles['space']}>
-      <center className="font-bold text-center text-xl mb-2">
-        <div className="mt-5 hidden md:block">MY SPACES</div>
-        <Dropdown>
-          <DropdownTrigger className="cursor-pointer">
-            <div className="md:hidden">
-              <Tooltip content="Click to View Spaces" className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']}>
-                <div className="bg-[#3E2723] justify-center text-center text-[#FFFFFF] rounded-lg text-[1.25rem]">MY SPACES</div>
-              </Tooltip>
-            </div>
-          </DropdownTrigger>
-          <DropdownMenu closeOnSelect={false}>
-            {
-              curr_spaces.map((space: any, index: number) => (
-                <DropdownItem key={index} className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']} onPress={() => switchSpace(index) }>
-                  <Tooltip className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']} content={"Switch to " + space.name + " Space"} placement="right">{space.name}</Tooltip>
-                  <Dropdown className="w-2" disableAnimation>
+
+  /**
+   * displays notes if any spaces exists;
+   * message displayed otherwise
+   * @returns Notes component or message
+   */
+  function checkSpacesWeb() {
+    if (curr_spaces.length > 0) {
+      return (
+        curr_spaces.map((space: any, index: number) => (
+            <ListboxItem  textValue="space" color="warning" className="flex items-center justify-between pt-5 pb-5 pr-1 pl-5 right-0" key={index} onPress={() => switchSpace(index) }>
+              <div className="flex-1 text-lg text-center">
+                  {space.name}
+                  <Dropdown className="w-2 ml-auto" disableAnimation>
                     <DropdownTrigger aria-label="open space menu options">
                         <FontAwesomeIcon icon={faCaretDown} 
-                            className="cursor-pointer"
+                            className="cursor-pointer ml-10"
                             size="2xs"
                         />
                     </DropdownTrigger>
                     <DropdownMenu>
                         <DropdownItem
-                          key="edit_title"
-                          description="Edit space title"
-                          onPress={() => setSpaceTitleEdit(true)}
-                          startContent={
+                        key="edit_title"
+                        description="Edit space title"
+                        onPress={() => setSpaceTitleEdit(true)}
+                        startContent={
                             <FontAwesomeIcon icon={faPenToSquare} 
-                              className="cursor-pointer"
+                            className="cursor-pointer"
                             />
-                          }
+                        }
                         >
                         Edit
                         </DropdownItem>
                         <DropdownItem
-                          key="delete"
-                          onClick={() => deleteSpace(index)}
-                          description="Delete entire space element"
-                          startContent={
-                            <FontAwesomeIcon icon={faTrash} 
-                              className="cursor-pointer"
-                            />
-                          }
+                        key="delete"
+                        onClick={() => deleteSpace(index)}
+                        description="Delete entire space element"
+                        startContent={<FontAwesomeIcon icon={faTrash} 
+                            className="cursor-pointer"
+                        />}
                         >
                         Delete
                         </DropdownItem>
@@ -274,8 +270,129 @@ export const Spaces = () => {
                         </ModalBody>
                     </ModalContent>
                   </Modal>
-                </DropdownItem>
-              ))
+              </div>
+            </ListboxItem>
+        ))
+      )
+    }
+    // notifies user that no spaces exist
+    return (
+      <ListboxItem className="mt-25 font-extrabold text-2xl" style={styles['text_style']}>
+          <div>No Spaces! Add spaces to start taking notes!</div>
+      </ListboxItem>
+    );
+  }
+
+  /**
+   * displays notes if any spaces exists;
+   * message displayed otherwise
+   * @returns Notes component or message
+   */
+  function checkSpacesMobile() {
+    if (curr_spaces.length > 0) {
+      return (
+        curr_spaces.map((space: any, index: number) => (
+          <DropdownItem key={index} className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']} onPress={() => switchSpace(index) }>
+            <Tooltip className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']} content={"Switch to " + space.name + " Space"} placement="right">{space.name}</Tooltip>
+            <Dropdown className="w-2" disableAnimation>
+              <DropdownTrigger aria-label="open space menu options">
+                  <FontAwesomeIcon icon={faCaretDown} 
+                      className="cursor-pointer"
+                      size="2xs"
+                  />
+              </DropdownTrigger>
+              <DropdownMenu>
+                  <DropdownItem
+                    key="edit_title"
+                    description="Edit space title"
+                    onPress={() => setSpaceTitleEdit(true)}
+                    startContent={
+                      <FontAwesomeIcon icon={faPenToSquare} 
+                        className="cursor-pointer"
+                      />
+                    }
+                  >
+                  Edit
+                  </DropdownItem>
+                  <DropdownItem
+                    key="delete"
+                    onClick={() => deleteSpace(index)}
+                    description="Delete entire space element"
+                    startContent={
+                      <FontAwesomeIcon icon={faTrash} 
+                        className="cursor-pointer"
+                      />
+                    }
+                  >
+                  Delete
+                  </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            <Modal isOpen={activeSpaceTitleEdit} onOpenChange={() => setSpaceTitleEdit(false)} className="p-2 pb-0">
+              <ModalContent>
+                  <ModalBody>
+                    <Form 
+                        className="w-full max-w-xs font-extrabold" 
+                        style={styles['button_style']}
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            let data = Object.fromEntries(new FormData(e.currentTarget));
+                            setSpaceTitleEdit(false)
+                            changeSpaceTitleVal(index, String(data.title))
+                        }}
+                    >
+                        <Input
+                          isRequired
+                          errorMessage="Please enter a valid title"
+                          label="Edit Title for Space"
+                          labelPlacement="outside"
+                          name="title"
+                          placeholder="Enter title"
+                          type="text"   
+                          style={styles['button_style']}
+                          autoComplete="off"
+                        />
+                        <Button 
+                          type="submit" 
+                          variant="bordered"
+                          className="bg-[#3E2723] text-[#FFFFFF]"
+                          style={styles['button_style']}
+                          aria-label="save title"
+                        >
+                          Save Title
+                        </Button>
+                    </Form>
+                  </ModalBody>
+              </ModalContent>
+            </Modal>
+          </DropdownItem>
+        ))
+      )
+    }
+    // notifies user that no spaces exist
+    return (
+      <DropdownItem key="no_spaces" className="mt-25 font-extrabold text-2xl" style={styles['text_style']}>
+          <div>No Spaces! Add spaces to start taking notes!</div>
+      </DropdownItem>
+    );
+  }
+
+
+  return (
+    <main className="bg-[url('/images/gallery/background_design_wave.png')] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-2 shadow-lg w-full md:w-1/5" style={styles['space']}>
+      <center className="font-bold text-center text-xl mb-2">
+        <div className="mt-5 hidden md:block">MY SPACES</div>
+        <Dropdown>
+          <DropdownTrigger className="cursor-pointer">
+            <div className="md:hidden">
+              <Tooltip content="Click to View Spaces" className="bg-[#3E2723] text-center text-[#FFFFFF] text-[.65rem]" style={styles['button_style']}>
+                <div className="bg-[#3E2723] justify-center text-center text-[#FFFFFF] rounded-lg text-[1.25rem]">MY SPACES</div>
+              </Tooltip>
+            </div>
+          </DropdownTrigger>
+          <DropdownMenu closeOnSelect={false}>
+            {
+              checkSpacesMobile()
             }
           </DropdownMenu>
         </Dropdown>
@@ -283,82 +400,7 @@ export const Spaces = () => {
       <Listbox key="spaces_box" className="hidden md:block" selectionMode="single" variant="shadow" aria-label="spaces section">
         <ListboxSection key="spaces" className="flex flex-col justify-center text-lg" showDivider>
             {
-              curr_spaces.map((space: any, index: number) => (
-                  <ListboxItem  textValue="space" color="warning" className="flex items-center justify-between pt-5 pb-5 pr-1 pl-5 right-0" key={index} onPress={() => switchSpace(index) }>
-                    <div className="flex-1 text-lg text-center">
-                        {space.name}
-                        <Dropdown className="w-2 ml-auto" disableAnimation>
-                          <DropdownTrigger aria-label="open space menu options">
-                              <FontAwesomeIcon icon={faCaretDown} 
-                                  className="cursor-pointer ml-10"
-                                  size="2xs"
-                              />
-                          </DropdownTrigger>
-                          <DropdownMenu>
-                              <DropdownItem
-                              key="edit_title"
-                              description="Edit space title"
-                              onPress={() => setSpaceTitleEdit(true)}
-                              startContent={
-                                  <FontAwesomeIcon icon={faPenToSquare} 
-                                  className="cursor-pointer"
-                                  />
-                              }
-                              >
-                              Edit
-                              </DropdownItem>
-                              <DropdownItem
-                              key="delete"
-                              onClick={() => deleteSpace(index)}
-                              description="Delete entire space element"
-                              startContent={<FontAwesomeIcon icon={faTrash} 
-                                  className="cursor-pointer"
-                              />}
-                              >
-                              Delete
-                              </DropdownItem>
-                          </DropdownMenu>
-                        </Dropdown>
-                        <Modal isOpen={activeSpaceTitleEdit} onOpenChange={() => setSpaceTitleEdit(false)} className="p-2 pb-0">
-                          <ModalContent>
-                              <ModalBody>
-                                <Form 
-                                    className="w-full max-w-xs font-extrabold" 
-                                    style={styles['button_style']}
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        let data = Object.fromEntries(new FormData(e.currentTarget));
-                                        setSpaceTitleEdit(false)
-                                        changeSpaceTitleVal(index, String(data.title))
-                                    }}
-                                >
-                                    <Input
-                                      isRequired
-                                      errorMessage="Please enter a valid title"
-                                      label="Edit Title for Space"
-                                      labelPlacement="outside"
-                                      name="title"
-                                      placeholder="Enter title"
-                                      type="text"   
-                                      style={styles['button_style']}
-                                      autoComplete="off"
-                                    />
-                                    <Button 
-                                      type="submit" 
-                                      variant="bordered"
-                                      className="bg-[#3E2723] text-[#FFFFFF]"
-                                      style={styles['button_style']}
-                                      aria-label="save title"
-                                    >
-                                      Save Title
-                                    </Button>
-                                </Form>
-                              </ModalBody>
-                          </ModalContent>
-                        </Modal>
-                    </div>
-                  </ListboxItem>
-              ))
+              checkSpacesWeb()
             }
         </ListboxSection>
         <ListboxSection className="flex justify-center" showDivider>

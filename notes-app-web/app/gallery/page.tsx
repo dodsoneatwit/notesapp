@@ -73,7 +73,7 @@ export default function Gallery() {
   return (
     <div>
       <Nav />
-      <div className="flex flex-row border-2 border-blue-600 pl-5 pr-5 md:pl-0 md:pr-0 justify-evenly flex-container">
+      <div className="flex flex-row pl-5 pr-5 md:pl-0 md:pr-0 justify-evenly flex-container">
         <Spaces />
         { checkSpaces() }
         <FlashAI />

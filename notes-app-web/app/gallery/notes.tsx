@@ -205,7 +205,7 @@ export const Notes = () => {
             style={{...styles.notesGrid}} 
             className="
             inset-shadow-lg hide-scrollbar flex overflow-y-auto 
-            justify-center pt-3 pb-3 grid gap-4 grid-cols-2 lg:grid-cols-3
+            justify-center pt-3 pl-3 pr-3 pb-3 grid gap-4 grid-cols-2 lg:grid-cols-3
             "
           >
             {
