@@ -77,9 +77,6 @@ export const Nav = () => {
               </div>
             </DropdownTrigger>
             <DropdownMenu style={styles["button_style"]}>
-              <DropdownItem key="profile">
-                Profile
-              </DropdownItem>
               <DropdownItem
                 onPress={() => logOut()} 
                 key="Logout"
