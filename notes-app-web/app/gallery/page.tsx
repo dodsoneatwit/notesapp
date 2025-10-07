@@ -73,17 +73,10 @@ export default function Gallery() {
   return (
     <div>
       <Nav />
-      <div className="flex flex-row pl-5 pr-5 md:pl-0 md:pr-0 justify-evenly flex-container">
+      <div className="flex flex-row pl-5 pr-5 md:pl-0 md:pr-0 justify-between flex-container">
         <Spaces />
         { checkSpaces() }
         <FlashAI />
-        <div className="fixed right-4 bottom-4 sm:hidden">
-          <FontAwesomeIcon icon={faComments} 
-            className="cursor-pointer"
-            style={{color: "3E2723"}}
-            size="2xl"
-          />
-        </div>
       </div>
     </div>
   );

@@ -379,7 +379,7 @@ export const Spaces = () => {
 
 
   return (
-    <main className="bg-[url('/images/gallery/background_design_wave.png')] border-3 border-[#3E2723] rounded-lg mx-auto mt-10 p-2 shadow-lg w-full md:w-1/5" style={styles['space']}>
+    <main className="bg-[url('/images/gallery/background_design_wave.png')] border-3 border-[#3E2723] rounded-lg mt-10 p-2 shadow-lg w-full md:w-1/6" style={styles['space']}>
       <center className="font-bold text-center text-xl mb-2">
         <div className="mt-5 hidden md:block">MY SPACES</div>
         <Dropdown>

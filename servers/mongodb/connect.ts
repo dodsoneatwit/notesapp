@@ -2,8 +2,11 @@
 import path from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "node:url";
-// connecting to client
+// connecting to MongoDB client
 import { MongoClient, ServerApiVersion } from "mongodb";
+
+// Anthropic Claude AI
+import Anthropic from '@anthropic-ai/sdk';
 
 // ESM __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -18,15 +21,29 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 import * as AccountApis from './APIs/account.ts';
 import * as NoteApis from './APIs/notes.ts';
 import * as SpacesApis from './APIs/spaces.ts'
+import * as AiApis from './APIs/ai_claude.ts'
 
 import express from 'express';
 import cors from "cors";
 
 let database = "NotesApp"
-let collections = ['Users', 'Notes']
+let collections = ['Users', 'Notes', 'Spaces']
+
+// initializing Express.js app
 const app = express();
-// initializing uri and database and connecting to client
+
+// initializing MongoDB uri, claude API, and database and connecting to client
 const uri = process.env.MONGO_DB!
+
+// Anthropic model essentials
+const model = "claude-3-5-haiku-20241022"
+const claude_api_key = process.env.CLAUDE_AI!
+const prompt = process.env.MODEL_PROMPT!
+
+const anthropic = new Anthropic({
+  apiKey: claude_api_key,
+});
+
 console.log("Connecting to MongoDB...")
 const client = new MongoClient(uri,  {
         serverApi: {
@@ -58,6 +75,9 @@ async function run() {
 
         // space specific APIs
         await SpacesApis.updateSpaces(app, client, database, collections)
+
+        // ai specific APIs
+        await AiApis.promptClaudeAi(app, anthropic, model, prompt)
         
         // Start the server
         app.listen(5000, () => {

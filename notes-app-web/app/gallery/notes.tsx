@@ -192,10 +192,9 @@ export const Notes = () => {
 
     return (
         <main 
-          className="flex md:w-200 justify-around rounded-lg border-3 border-[#3E2723] md:mx-auto mt-10 mb-10 p-5 bg-[#FFFFFF] max-h-90 md:max-h-150 md:h-dvh"
+          className="flex md:w-200 justify-around rounded-lg border-3 border-[#3E2723] mt-10 mb-10 p-5 bg-[#FFFFFF] max-h-90 md:max-h-150 md:h-dvh"
           style={{
             display: "flex",
-            // width: "vw",
             justifyContent: "space-evenly",
             flexDirection: "column", 
             gap: "1rem"
