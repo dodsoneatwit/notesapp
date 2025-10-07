@@ -31,6 +31,7 @@ let collections = ['Users', 'Notes', 'Spaces']
 
 // initializing Express.js app
 const app = express();
+const host = process.env.WEB_HOST
 
 // initializing MongoDB uri, claude API, and database and connecting to client
 const uri = process.env.MONGO_DB!
@@ -54,6 +55,9 @@ const client = new MongoClient(uri,  {
     }
 );
 
+/**
+ * running server host
+ */
 async function run() {
     try {
         // connects client and listens for server response
@@ -62,7 +66,7 @@ async function run() {
         // initial setup
         app.use(express.json());
         app.use(cors({
-            origin: 'http://localhost:3000' // frontend URL
+            origin: host // frontend URL
         }));
 
         // account specific APIs
