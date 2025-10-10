@@ -12,7 +12,7 @@ import { setSpaces } from '../store/spacesSlice'
 export default function SignInForm({signingUp}: {signingUp: boolean}) {
 
     // server URL: local and public
-    const server_api = process.env.AMP_EC2_SERVER || "http://localhost:5000"
+    const server_api = process.env.NEXT_PUBLIC_AMP_EC2_SERVER // replace with localhoat server address
 
     const router = useRouter();
     const [action, setAction] = useState<string | null>(null);
@@ -86,6 +86,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     }
 
     async function checkCredentials(email: string, password: string) {
+        console.log("SERVER: ", server_api)
         let result = await fetch(`${server_api}/user`, {
             method: 'GET',
             headers: {

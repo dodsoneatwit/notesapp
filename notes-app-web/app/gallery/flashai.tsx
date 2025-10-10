@@ -21,7 +21,7 @@ import {faPaperPlane, faComments} from '@fortawesome/free-solid-svg-icons';
 export const FlashAI = () => {
 
     // server URL: local and public
-    const server_api = process.env.AMP_EC2_SERVER || "http://localhost:5000"
+    const server_api = process.env.NEXT_PUBLIC_AMP_EC2_SERVER
 
     // dispatch module for using global store functions
     const dispatch = useDispatch();

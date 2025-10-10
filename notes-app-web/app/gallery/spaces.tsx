@@ -23,7 +23,7 @@ import { clearCredentials } from '../../store/credentialsSlice'
 export const Spaces = () => {
 
   // server URL: local and public
-  const server_api = process.env.AMP_EC2_SERVER || "http://localhost:5000"
+  const server_api = process.env.NEXT_PUBLIC_AMP_EC2_SERVER
 
   // routing to other pages
   const router = useRouter();
