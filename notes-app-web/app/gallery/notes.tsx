@@ -22,6 +22,10 @@ export const Notes = () => {
     const curr_spaces = useSelector((state: any) => state.spaces.spaces);
     const curr_space_index = useSelector((state: any) => state.spaces.index);
     const dispatch = useDispatch();
+
+    // server URL: local and public
+    const server_api = process.env.AMP_EC2_SERVER || "http://localhost:5000"
+
     // custom CSS styles
     let styles: { [key: string]: React.CSSProperties } = {
         button_style: { 
@@ -164,7 +168,7 @@ export const Notes = () => {
      */
     async function saveNotes() {
       // API request to sent new notes array to server for updating
-      await fetch (`http://localhost:5000/add_notes_spaces`, {
+      await fetch (`${server_api}/add_notes_spaces`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

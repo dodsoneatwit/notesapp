@@ -11,6 +11,9 @@ import { setSpaces } from '../store/spacesSlice'
 
 export default function SignInForm({signingUp}: {signingUp: boolean}) {
 
+    // server URL: local and public
+    const server_api = process.env.AMP_EC2_SERVER || "http://localhost:5000"
+
     const router = useRouter();
     const [action, setAction] = useState<string | null>(null);
 
@@ -38,7 +41,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     }
 
     // async function fetchUserNotes(username: string, password: string) {
-    //     let result = await fetch(`http://localhost:5000/get_notes`, {
+    //     let result = await fetch(`S{server_api}/get_notes`, {
     //         method: 'GET',
     //         headers: {
     //             'Content-Type': 'application/json',
@@ -61,7 +64,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     // }
 
     async function fetchUserSpaces(username: string, password: string) {
-        let result = await fetch(`http://localhost:5000/get_spaces`, {
+        let result = await fetch(`${server_api}/get_spaces`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -83,7 +86,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     }
 
     async function checkCredentials(email: string, password: string) {
-        let result = await fetch(`http://localhost:5000/user`, {
+        let result = await fetch(`${server_api}/user`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -118,7 +121,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     }
 
     async function createAccount(firstname: string, lastname: string, username: string, email: string, password: string) {
-        await fetch(`http://localhost:5000/account_creation`, {
+        await fetch(`${server_api}/account_creation`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

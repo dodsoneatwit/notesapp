@@ -22,6 +22,9 @@ import { clearCredentials } from '../../store/credentialsSlice'
  */
 export const Spaces = () => {
 
+  // server URL: local and public
+  const server_api = process.env.AMP_EC2_SERVER || "http://localhost:5000"
+
   // routing to other pages
   const router = useRouter();
 
@@ -180,7 +183,7 @@ export const Spaces = () => {
    */
   async function saveSpaces() {
       // saves changes to spaces in MongoDB through API request
-      await fetch (`http://localhost:5000/update_spaces`, {
+      await fetch (`${server_api}/update_spaces`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -20,6 +20,9 @@ import {faPaperPlane, faComments} from '@fortawesome/free-solid-svg-icons';
  */
 export const FlashAI = () => {
 
+    // server URL: local and public
+    const server_api = process.env.AMP_EC2_SERVER || "http://localhost:5000"
+
     // dispatch module for using global store functions
     const dispatch = useDispatch();
     
@@ -146,7 +149,7 @@ export const FlashAI = () => {
         console.log('--CURRENT CHAT--', chat)
 
         // retrieves assistant response based on input message
-        let result = await fetch("http://localhost:5000/prompt_claude_ai", {
+        let result = await fetch(`${server_api}/prompt_claude_ai`, {
             method: "POST",
             headers:    {
                 'Content-Type': 'application/json',
