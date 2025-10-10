@@ -6,7 +6,7 @@
  * @param database - database coontaining collections
  * @param collections - array of collections in database
  */
-async function addNotesToAccountSpaces(app: any, client: any, database: string, collections: string[]) {
+async function addNotesToAccountSpaces(app, client, database, collections) {
     // API to add ntoes to user's account
     app.post("/add_notes_spaces", async (req, resp) => {
         try {
@@ -52,7 +52,7 @@ async function addNotesToAccountSpaces(app: any, client: any, database: string, 
  * @param database - database coontaining collections
  * @param collections - array of collections in database 
  */
-async function getAccountSpaces(app: any, client: any, database: string, collections: string[]) {
+async function getAccountSpaces(app, client, database, collections) {
 
     app.get("/get_spaces", async (req, resp) => {
         try {

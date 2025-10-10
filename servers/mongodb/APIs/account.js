@@ -5,9 +5,9 @@
  * @param database - database coontaining collections
  * @param collections - array of collections in database
  */
-async function getUserAccount(app: any, client: any, database: string, collections: string[]) {
+async function getUserAccount(app, client, database, collections) {
     // user account retrieval API
-    app.get("/user", async (req: any, resp: any) => {
+    app.get("/user", async (req, resp) => {
         try {
             console.log(`Request: ${req}`)
 
@@ -33,7 +33,7 @@ async function getUserAccount(app: any, client: any, database: string, collectio
  * @param database - database coontaining collections
  * @param collections - array of collections in database
  */
-async function createAccount(app: any, client: any, database: string, collections: string[]) {
+async function createAccount(app, client, database, collections) {
     // API to register a user
     app.post("/account_creation", async (req, resp) => {
         try {

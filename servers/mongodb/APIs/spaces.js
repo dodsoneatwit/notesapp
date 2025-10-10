@@ -5,7 +5,7 @@
  * @param database - database coontaining collections
  * @param collections - array of collections in database
  */
-async function updateSpaces(app: any, client: any, database: string, collections: string[]) {
+async function updateSpaces(app, client, database, collections) {
     // API to add ntoes to user's account
     app.post("/update_spaces", async (req, resp) => {
         try {

@@ -7,7 +7,7 @@ import Anthropic from "@anthropic-ai/sdk";
  * @param model - claude AI model ID
  * @param prompt - system prompt instructions
  */
-async function promptClaudeAi(app: any, ai: Anthropic, model: string, prompt: string) {
+async function promptClaudeAi(app, ai, model, prompt) {
     // API to add ntoes to user's account
     app.post("/prompt_claude_ai", async (req, resp) => {
         try {

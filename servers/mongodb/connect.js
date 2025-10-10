@@ -18,10 +18,10 @@ console.log(`File name: ${__filename}`)
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 // importing APIs
-import * as AccountApis from './APIs/account.ts';
-import * as NoteApis from './APIs/notes.ts';
-import * as SpacesApis from './APIs/spaces.ts'
-import * as AiApis from './APIs/ai_claude.ts'
+import * as AccountApis from './APIs/account.js';
+import * as NoteApis from './APIs/notes.js';
+import * as SpacesApis from './APIs/spaces.js'
+import * as AiApis from './APIs/ai_claude.js'
 
 import express from 'express';
 import cors from "cors";
@@ -34,12 +34,12 @@ const app = express();
 const host = process.env.WEB_HOST
 
 // initializing MongoDB uri, claude API, and database and connecting to client
-const uri = process.env.MONGO_DB!
+const uri = process.env.MONGO_DB
 
 // Anthropic model essentials
 const model = "claude-3-5-haiku-20241022"
-const claude_api_key = process.env.CLAUDE_AI!
-const prompt = process.env.MODEL_PROMPT!
+const claude_api_key = process.env.CLAUDE_AI
+const prompt = process.env.MODEL_PROMPT
 
 const anthropic = new Anthropic({
   apiKey: claude_api_key,
