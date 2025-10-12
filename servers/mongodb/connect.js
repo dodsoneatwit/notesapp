@@ -14,6 +14,9 @@ const __dirname = path.dirname(__filename);
 console.log(`Directory name: ${__dirname}`)
 console.log(`File name: ${__filename}`)
 
+const PORT = 5000;
+const HOST = "0.0.0.0"
+
 // Load ../.env relative to this file
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
@@ -31,7 +34,7 @@ let collections = ['Users', 'Notes', 'Spaces']
 
 // initializing Express.js app
 const app = express();
-const host = process.env.WEB_HOST
+const hosts = [process.env.WEB_HOST, 'https://ecdflashnotes.com', 'https://www.ecdflashnotes.com']
 
 // initializing MongoDB uri, claude API, and database and connecting to client
 const uri = process.env.MONGO_DB
@@ -51,7 +54,10 @@ const client = new MongoClient(uri,  {
             version: ServerApiVersion.v1,
             strict: true,
             deprecationErrors: true,
-        }
+        },
+        ssl: true,
+	tls: true,
+	tlsAllowInvalidCertificates: false
     }
 );
 
@@ -66,8 +72,17 @@ async function run() {
         // initial setup
         app.use(express.json());
         app.use(cors({
-            origin: host // frontend URL
+            origin: hosts // frontend URL
         }));
+	app.use((req, res, next) => {
+	  const authHeader = req.headers.authorization;
+	  const token = authHeader && authHeader.split(' ')[1]
+
+	  if (token !== process.env.API_TOKEN) {
+	    return res.status(403).json({ error: "Unauthorized" });
+	  }
+	  next()
+	});
 
         // account specific APIs
         await AccountApis.getUserAccount(app, client, database, collections);
@@ -84,8 +99,8 @@ async function run() {
         await AiApis.promptClaudeAi(app, anthropic, model, prompt)
         
         // Start the server
-        app.listen(5000, () => {
-            console.log("App is running on port 5000");
+        app.listen(PORT, HOST, () => {
+            console.log(`App is running on http://${HOST}:${PORT}`);
         });
 
     } catch (e) {
