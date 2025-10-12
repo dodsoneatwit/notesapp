@@ -187,6 +187,7 @@ export const Spaces = () => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}`
         },
         body: JSON.stringify({ username: curr_username, password: curr_password, Spaces: curr_spaces })
       })

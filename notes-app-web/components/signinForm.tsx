@@ -45,6 +45,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
     //         method: 'GET',
     //         headers: {
     //             'Content-Type': 'application/json',
+    //              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}`
     //         }
     //     });
     //     console.log("--FETCHING NOTES--")
@@ -68,6 +69,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}`
             }
         });
         console.log("--FETCHING SPACES--")
@@ -91,6 +93,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}`
             },
         });
         console.log("--RESULT--")
@@ -126,6 +129,7 @@ export default function SignInForm({signingUp}: {signingUp: boolean}) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}`
             },
             body: JSON.stringify({ firstname, lastname, username, email, password })
         });
