@@ -32,6 +32,7 @@ Install the latest version of Node.js here at [nodejs.org](https://nodejs.org/en
 <li>Redux for centralizing state of variables globally across application; creates local store, variables, and reducers to change values of states [Redux.org](https://redux.js.org/)</li>
 <li>HeroUI for dynamic and adaptable user components enhance developement and user experience [HeroUI.com](https://www.heroui.com/docs/frameworks/vite)</li>
 <li>Font Awesome for supplying app with ready icons at [FontAwesome.com](https://fontawesome.com/icons)</li>
+<li>TailwindCSS for enhanced styling with React components [Tailwindcss.com](https://tailwindcss.com/docs)</li>
 
 ## Back-End
 
