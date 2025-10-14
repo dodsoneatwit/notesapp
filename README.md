@@ -1,4 +1,4 @@
-# NotesApp
+# Flash Notes App
 
 ![Alt text](notes-app-web/public/images/readme/flashnotesfrontpage.png)
 
