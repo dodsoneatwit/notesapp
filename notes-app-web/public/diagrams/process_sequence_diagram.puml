@@ -1,0 +1,57 @@
+@startuml
+' participant Participant as Foo
+' actor       Actor       as Foo1
+' boundary    Boundary    as Foo2
+' control     Control     as Foo3
+' entity      Entity      as Foo4
+' database    Database    as Foo5
+' collections Collections as Foo6
+' queue       Queue       as Foo7
+
+skinparam backgroundColor #f8f8f8
+
+skinparam sequence {
+ActorBorderColor #3E2723
+
+ParticipantBorderColor #3E2723
+ParticipantBackgroundColor #3E2723
+ParticipantFontSize 17
+ParticipantFontColor #ffffff
+
+ActorBackgroundColor #000000
+ActorFontSize 17
+ActorFontName Aapex
+}
+
+
+actor Actor as User
+participant "Frontend" as App
+
+User -> App : Input login credentials 
+activate App #f2e1a4
+
+participant "Application Load Balancer" as ApplicationLoadBalancer
+App -> ApplicationLoadBalancer : HTTPS (443) request routed to ALB path
+activate ApplicationLoadBalancer #f2e1a4
+
+participant "EC2 Server" as EC2Server
+ApplicationLoadBalancer -> EC2Server : HTTP (80) request to private VPC; SSL termination
+activate EC2Server #f2e1a4
+
+database Database as MongoDB
+EC2Server -> MongoDB : GET request to retrieve credentials
+activate MongoDB #f2e1a4
+
+MongoDB -> EC2Server : Response sent with credentials data
+deactivate MongoDB #f2e1a4
+
+EC2Server -> ApplicationLoadBalancer : Sends response to ALB
+deactivate EC2Server #f2e1a4
+
+ApplicationLoadBalancer -> App: Encrypts response and sends to client
+deactivate ApplicationLoadBalancer #3E2723
+
+App -> User : Verifies user credentials
+deactivate App #3E2723
+
+@enduml
