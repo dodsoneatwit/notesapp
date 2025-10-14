@@ -36,9 +36,11 @@ Install the latest version of Node.js here at [nodejs.org](https://nodejs.org/en
 ## Back-End
 
 ### Running the Server With Next.js Application
-1. Change directory to /servers/mongodb
-2. Execute command <b>node connect.js</b>
-3. Console should log hosted URL: http://localhost:5000
+1. Change directory to /servers
+2. Run <b>npm i</b> to install needed packages/libraries.
+3. Change directory to /servers/mongodb
+4. Execute command <b>node connect.js</b>
+5. Console should log hosted URL: http://localhost:5000
 
 ### Tools/Resources Used for SSR (Server-Side Rendering)
 
